@@ -95,7 +95,7 @@
         requireLoginOrRedirect: function () {
             if (!ADMIN_AUTH.loggedIn) {
                 const back = encodeURIComponent(w.location.pathname + w.location.search);
-                w.location.href = '/Admin/login.html?redirect=' + back;
+                w.location.href = '../../../admin/login.html?redirect=' + back;
                 return false;
             }
             return true;

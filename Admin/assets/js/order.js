@@ -263,7 +263,7 @@
     else flat.push(order);
     LS.set(KEYS.FLAT, flat);
 
-    // 4) phát chuông
+    // 4) phát chuông (cho TAB KHÁC)
     try {
       localStorage.setItem(KEYS.PING1, String(Date.now()));
     } catch {}
@@ -647,10 +647,13 @@
     if (e.target === modal) closeModal();
   });
 
+  // ✅ FIX: sau khi cập nhật trạng thái trong modal, load lại list rồi render
   mBtnUpdate?.addEventListener("click", () => {
     if (!state.modalId) return;
     try {
       updateStatus(state.modalId, mStatusSel.value);
+      // đồng bộ lại state.list từ localStorage
+      state.list = loadAdminOrdersMerged();
       closeModal();
       render();
       alert("Đã cập nhật trạng thái");
@@ -680,12 +683,14 @@
       if (act === "confirm") {
         if (!canConfirm(st)) return;
         updateStatus(id, "confirmed");
+        state.list = loadAdminOrdersMerged(); // ✅ FIX
         render();
         return;
       }
       if (act === "deliver") {
         if (!canDeliver(st)) return;
         updateStatus(id, "delivered");
+        state.list = loadAdminOrdersMerged(); // ✅ FIX
         render();
         return;
       }
@@ -693,6 +698,7 @@
         if (!canCancel(st)) return;
         if (!confirm("Xác nhận huỷ đơn này?")) return;
         updateStatus(id, "canceled");
+        state.list = loadAdminOrdersMerged(); // ✅ FIX
         render();
         return;
       }

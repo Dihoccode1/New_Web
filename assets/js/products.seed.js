@@ -8,9 +8,9 @@ window.SV_PRODUCT_SEED = [
     price: 550000,
     original_price: 690000,
     image:
-      "../images/product/Hair_spray/Davines_Extra_Strong_Hairspray/gom-xit-toc-davines-extra-strong-hairspray-400ml.webp",
+      "../../assets/images/product/Hair_spray/Davines_Extra_Strong_Hairspray/gom-xit-toc-davines-extra-strong-hairspray-400ml.webp",
     images: [
-      "../images/product/Hair_spray/Davines_Extra_Strong_Hairspray/gom-xit-toc-davines-extra-strong-hairspray-400ml.webp",
+      "../../assets/images/product/Hair_spray/Davines_Extra_Strong_Hairspray/gom-xit-toc-davines-extra-strong-hairspray-400ml.webp",
     ],
     badge: "sale",
     featured: false,
@@ -48,9 +48,9 @@ window.SV_PRODUCT_SEED = [
     category: "hair_spray",
     price: 550000,
     image:
-      "../images/product/Hair_spray/Davines_Strong_Hairspray/gom-xit-toc-davines-strong-hairspray-400ml.webp",
+      "../../assets/images/product/Hair_spray/Davines_Strong_Hairspray/gom-xit-toc-davines-strong-hairspray-400ml.webp",
     images: [
-      "../images/product/Hair_spray/Davines_Strong_Hairspray/gom-xit-toc-davines-strong-hairspray-400ml.webp",
+      "../../assets/images/product/Hair_spray/Davines_Strong_Hairspray/gom-xit-toc-davines-strong-hairspray-400ml.webp",
     ],
     badge: "",
     featured: false,
@@ -89,9 +89,9 @@ window.SV_PRODUCT_SEED = [
     price: 300000,
     original_price: 550000,
     image:
-      "../images/product/Hair_spray/Bed_head/gom-tigi-bead-head-2-700.webp",
+      "../../assets/images/product/Hair_spray/Bed_head/gom-tigi-bead-head-2-700.webp",
     images: [
-      "../images/product/Hair_spray/Bed_head/gom-tigi-bead-head-2-700.webp",
+      "../../assets/images/product/Hair_spray/Bed_head/gom-tigi-bead-head-2-700.webp",
     ],
     badge: "sale",
     featured: false,
@@ -128,9 +128,9 @@ window.SV_PRODUCT_SEED = [
     category: "hair_spray",
     price: 690000,
     image:
-      "../images/product/Hair_spray/Kevin Murphy Session Spray/1468319756-session-spray-1.webp",
+      "../../assets/images/product/Hair_spray/Kevin_Murphy_Session_Spray/1468319756-session-spray-1.webp",
     images: [
-      "../images/product/Hair_spray/Kevin Murphy Session Spray/1468319756-session-spray-1.webp",
+      "../../assets/images/product/Hair_spray/Kevin_Murphy_Session_Spray/1468319756-session-spray-1.webp",
     ],
     badge: "",
     featured: true,
@@ -168,9 +168,9 @@ window.SV_PRODUCT_SEED = [
     price: 1100000,
     original_price: 1290000,
     image:
-      "/assets/images/product/Hair_spray/Butterfly_shadow_600ml/1426968buter-fly.webp",
+      "../../assets/images/product/Hair_spray/Butterfly_shadow_600ml/1426968buter-fly.webp",
     images: [
-      "/assets/images/product/Hair_spray/Butterfly_shadow_600ml/1426968buter-fly.webp",
+      "../../assets/images/product/Hair_spray/Butterfly_shadow_600ml/1426968buter-fly.webp",
     ],
     badge: "new",
     featured: true,
@@ -209,9 +209,9 @@ window.SV_PRODUCT_SEED = [
     price: 390000,
     original_price: 480000,
     image:
-      "/assets/images/product/Hair_spray/Luxurious/gom-luxurious-10-c4ce5ee0-3663-4526-befa-79e4952930a0.webp",
+      "../../assets/images/product/Hair_spray/Luxurious/gom-luxurious-10-c4ce5ee0-3663-4526-befa-79e4952930a0.webp",
     images: [
-      "/assets/images/product/Hair_spray/Luxurious/gom-luxurious-10-c4ce5ee0-3663-4526-befa-79e4952930a0.webp",
+      "../../assets/images/product/Hair_spray/Luxurious/gom-luxurious-10-c4ce5ee0-3663-4526-befa-79e4952930a0.webp",
     ],
     badge: "new",
     featured: false,
@@ -252,9 +252,9 @@ window.SV_PRODUCT_SEED = [
     price: 250000,
     original_price: 350000,
     image:
-      "/assets/images/product/Hair_wax/Apestomen_Nitro_Wax/apestomen-nitro-wax-compressed-1-600x600.webp",
+      "../../assets/images/product/Hair_wax/Apestomen_Nitro_Wax/apestomen-nitro-wax-compressed-1-600x600.webp",
     images: [
-      "/assets/images/product/Hair_wax/Apestomen_Nitro_Wax/apestomen-nitro-wax-compressed-1-600x600.webp",
+      "../../assets/images/product/Hair_wax/Apestomen_Nitro_Wax/apestomen-nitro-wax-compressed-1-600x600.webp",
     ],
     badge: "sale",
     featured: true,
@@ -292,9 +292,9 @@ window.SV_PRODUCT_SEED = [
     price: 250000,
     original_price: 350000,
     image:
-      "/assets/images/product/Hair_wax/By_Vilain_Gold_Digger/by-vilain-gold-digger-travel-open.webp",
+      "../../assets/images/product/Hair_wax/By_Vilain_Gold_Digger/by-vilain-gold-digger-travel-open.webp",
     images: [
-      "/assets/images/product/Hair_wax/By_Vilain_Gold_Digger/by-vilain-gold-digger-travel-open.webp",
+      "../../assets/images/product/Hair_wax/By_Vilain_Gold_Digger/by-vilain-gold-digger-travel-open.webp",
     ],
     badge: "",
     featured: false,
@@ -332,9 +332,9 @@ window.SV_PRODUCT_SEED = [
     category: "hair_wax",
     price: 500000,
     image:
-      "/assets/images/product/Hair_wax/Hanz_de_Fuko_Quicksand/untitled-1-425eb329-c3d1-4be6-b6f8-b687c916e2d2.webp",
+      "../../assets/images/product/Hair_wax/Hanz_de_Fuko_Quicksand/untitled-1-425eb329-c3d1-4be6-b6f8-b687c916e2d2.webp",
     images: [
-      "/assets/images/product/Hair_wax/Hanz_de_Fuko_Quicksand/untitled-1-425eb329-c3d1-4be6-b6f8-b687c916e2d2.webp",
+      "../../assets/images/product/Hair_wax/Hanz_de_Fuko_Quicksand/untitled-1-425eb329-c3d1-4be6-b6f8-b687c916e2d2.webp",
     ],
     badge: "",
     featured: true,
@@ -371,9 +371,9 @@ window.SV_PRODUCT_SEED = [
     category: "hair_wax",
     price: 650000,
     image:
-      "/assets/images/product/Hair_wax/Kevin_Murphy_Night_Rider/kevin-murphy-night-rider-2.jpg",
+      "../../assets/images/product/Hair_wax/Kevin_Murphy_Night_Rider/kevin-murphy-night-rider-2.jpg",
     images: [
-      "/assets/images/product/Hair_wax/Kevin_Murphy_Night_Rider/kevin-murphy-night-rider-2.jpg",
+      "../../assets/images/product/Hair_wax/Kevin_Murphy_Night_Rider/kevin-murphy-night-rider-2.jpg",
     ],
     badge: "",
     featured: true,
@@ -410,9 +410,9 @@ window.SV_PRODUCT_SEED = [
     category: "hair_wax",
     price: 1200000,
     image:
-      "/assets/images/product/Hair_wax/Patricks_M3_Matte_Finish_Strong_Hold_Styling_Product/patricks-m3-matte-finish-1.webp",
+      "../../assets/images/product/Hair_wax/Patricks_M3_Matte_Finish_Strong_Hold_Styling_Product/patricks-m3-matte-finish-1.webp",
     images: [
-      "/assets/images/product/Hair_wax/Patricks_M3_Matte_Finish_Strong_Hold_Styling_Product/patricks-m3-matte-finish-1.webp",
+      "../../assets/images/product/Hair_wax/Patricks_M3_Matte_Finish_Strong_Hold_Styling_Product/patricks-m3-matte-finish-1.webp",
     ],
     badge: "new",
     featured: true,
@@ -452,9 +452,9 @@ window.SV_PRODUCT_SEED = [
     price: 550000,
     original_price: 689000,
     image:
-      "/assets/images/product/Hair_conditioner/Blumaan_Hydrating_Hair_Oil/00-hydrating-hair-oil-2000.webp",
+      "../../assets/images/product/Hair_conditioner/Blumaan_Hydrating_Hair_Oil/00-hydrating-hair-oil-2000.webp",
     images: [
-      "/assets/images/product/Hair_conditioner/Blumaan_Hydrating_Hair_Oil/00-hydrating-hair-oil-2000.webp",
+      "../../assets/images/product/Hair_conditioner/Blumaan_Hydrating_Hair_Oil/00-hydrating-hair-oil-2000.webp",
     ],
     badge: "sale",
     featured: true,
@@ -491,9 +491,9 @@ window.SV_PRODUCT_SEED = [
     category: "hair_conditioner",
     price: 300000,
     image:
-      "/assets/images/product/Hair_conditioner/Moroccanoil_Treatment/tinh-dau-duong-toc-moroccanoil-25ml-1.webp",
+      "../../assets/images/product/Hair_conditioner/Moroccanoil_Treatment/tinh-dau-duong-toc-moroccanoil-25ml-1.webp",
     images: [
-      "/assets/images/product/Hair_conditioner/Moroccanoil_Treatment/tinh-dau-duong-toc-moroccanoil-25ml-1.webp",
+      "../../assets/images/product/Hair_conditioner/Moroccanoil_Treatment/tinh-dau-duong-toc-moroccanoil-25ml-1.webp",
     ],
     badge: "",
     featured: true,
@@ -532,9 +532,9 @@ window.SV_PRODUCT_SEED = [
     category: "volumizing_powder",
     price: 450000,
     image:
-      "/assets/images/product/Volumizing_powder/Reuzel_Matte_Texture_Powder/reuzel-matte-texture-powder-4.webp",
+      "../../assets/images/product/Volumizing_powder/Reuzel_Matte_Texture_Powder/reuzel-matte-texture-powder-4.webp",
     images: [
-      "/assets/images/product/Volumizing_powder/Reuzel_Matte_Texture_Powder/reuzel-matte-texture-powder-4.webp",
+      "../../assets/images/product/Volumizing_powder/Reuzel_Matte_Texture_Powder/reuzel-matte-texture-powder-4.webp",
     ],
     badge: "out_of_stock",
     featured: false,
@@ -571,9 +571,9 @@ window.SV_PRODUCT_SEED = [
     category: "volumizing_powder",
     price: 200000,
     image:
-      "/assets/images/product/Volumizing_powder/Roug_Textured Power_60ml/roug-textured-hair-power-3.webp",
+      "../../assets/images/product/Volumizing_powder/Roug_Textured Power_60ml/roug-textured-hair-power-3.webp",
     images: [
-      "/assets/images/product/Volumizing_powder/Roug_Textured Power_60ml/roug-textured-hair-power-3.webp",
+      "../../assets/images/product/Volumizing_powder/Roug_Textured Power_60ml/roug-textured-hair-power-3.webp",
     ],
     badge: "",
     featured: false,
@@ -605,9 +605,9 @@ window.SV_PRODUCT_SEED = [
     category: "volumizing_powder",
     price: 250000,
     image:
-      "/assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
+      "../../assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
     images: [
-      "/assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
+      "../../assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
     ],
     badge: "",
     featured: false,
@@ -644,9 +644,9 @@ window.SV_PRODUCT_SEED = [
     price: 450000,
     original_price: 750000,
     image:
-      "/assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
+      "../../assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
     images: [
-      "/assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
+      "../../assets/images/product/Volumizing_powder/Volcanic_Ash_Styling_Powder/bot-tao-phong-apestomen-ash.webp",
     ],
     badge: "sale",
     featured: true,
@@ -683,9 +683,9 @@ window.SV_PRODUCT_SEED = [
     price: 400000,
     original_price: 450000,
     image:
-      "/assets/images/product/Volumizing_powder/Dapper_Dan_ULTRA_MATTE_TEXTURE_DUST/texture-dust-front-2048x.webp",
+      "../../assets/images/product/Volumizing_powder/Dapper_Dan_ULTRA_MATTE_TEXTURE_DUST/texture-dust-front-2048x.webp",
     images: [
-      "/assets/images/product/Volumizing_powder/Dapper_Dan_ULTRA_MATTE_TEXTURE_DUST/texture-dust-front-2048x.webp",
+      "../../assets/images/product/Volumizing_powder/Dapper_Dan_ULTRA_MATTE_TEXTURE_DUST/texture-dust-front-2048x.webp",
     ],
     badge: "sale",
     featured: true,

@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Font Awesome (đường dẫn TƯƠNG ĐỐI) -->
     <link
       rel="stylesheet"
-      href="../fontawesome-free-6.7.2-web/css/all.min.css">
-    <!-- GUARD: chưa đăng nhập admin -> quay về /admin/login.html -->
+      href="../fontawesome-free-6.7.2-web/css/all.min.css"
+    />
+
+    <!-- GUARD: chưa đăng nhập admin -> quay về ./login.html -->
     <script>
       (function () {
         try {
@@ -20,13 +24,144 @@
       })();
     </script>
 
-    <!-- dùng đường dẫn TƯƠNG ĐỐI -->
+    <!-- CSS admin chung (TƯƠNG ĐỐI) -->
     <link rel="stylesheet" href="./assets/css/style.css" />
+
     <title>Bảng điều khiển dành cho quản trị viên</title>
+
+    <!-- Một chút CSS tinh chỉnh cho Dashboard -->
+    <style>
+      body {
+        background: #f3f4f6;
+      }
+      .main {
+        padding: 16px;
+      }
+      .dashboard-page {
+        padding: 8px 8px 24px;
+      }
+      .dashboard-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .dashboard-header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #111827;
+      }
+      .dashboard-header .sub {
+        margin-top: 4px;
+        font-size: 13px;
+        color: #6b7280;
+      }
+      .dashboard-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .dashboard-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .dashboard-actions .btn.primary {
+        background: #1f235a;
+        border-color: #1f235a;
+        color: #ffffff;
+      }
+      .dashboard-actions .btn i {
+        font-size: 13px;
+      }
+
+      /* Làm cardBox nhìn đều & thoáng hơn */
+      .cardBox {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+      .card {
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        border: 1px solid #e5e7eb;
+      }
+      .card .numbers {
+        font-size: 22px;
+      }
+      .card .cardName {
+        font-size: 13px;
+        color: #6b7280;
+      }
+      .card .iconBx {
+        font-size: 28px;
+        opacity: 0.85;
+      }
+
+      /* Bảng dưới: thêm nền nhẹ, bo góc */
+      .details {
+        display: grid;
+        grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr);
+        gap: 18px;
+      }
+      @media (max-width: 960px) {
+        .details {
+          grid-template-columns: 1fr;
+        }
+      }
+      .recentOrders,
+      .recentCustomers {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+        padding: 14px 14px 6px;
+      }
+      .recentOrders table,
+      .recentCustomers table {
+        margin-top: 8px;
+      }
+      .recentOrders .cardHeader,
+      .recentCustomers .cardHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .recentOrders .cardHeader h2,
+      .recentCustomers .cardHeader h2 {
+        margin: 0;
+        font-size: 16px;
+        color: #111827;
+      }
+      .recentOrders .btn,
+      .recentCustomers .btn {
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      /* Chào mừng admin trong sidebar: thêm hover nhẹ */
+      .welcome-admin-tile > div {
+        transition: box-shadow 0.2s ease, transform 0.15s ease;
+      }
+      .welcome-admin-tile > div:hover {
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.16);
+        transform: translateY(-1px);
+      }
+    </style>
   </head>
 
   <body>
     <div class="container">
+      <!-- SIDEBAR -->
       <div class="navagation">
         <ul>
           <li>
@@ -38,136 +173,178 @@
 
           <li class="hovered" id="nav-dashboard">
             <a href="./index.html">
-              <span class="icon"
-                ><i class="fa-solid fa-house"></i>
-</span>
+              <span class="icon">
+                <i class="fa-solid fa-house"></i>
+              </span>
               <span class="title">Bảng điều khiển</span>
             </a>
           </li>
 
           <li id="nav-customers">
             <a href="./users.html">
-              <span class="icon"
-                ><i class="fa-solid fa-user"></i></span>
+              <span class="icon">
+                <i class="fa-solid fa-user-group"></i>
+              </span>
               <span class="title">Quản lý khách hàng</span>
             </a>
           </li>
 
-<li id="nav-categories">
-  <a href="./categories.html">
-    <span class="icon">
-      <i class="fa-solid fa-layer-group"></i>
-    </span>
-    <span class="title">Quản lý danh mục</span>
-  </a>
-</li>
-
+          <li id="nav-categories">
+            <a href="./categories.html">
+              <span class="icon">
+                <i class="fa-solid fa-layer-group"></i>
+              </span>
+              <span class="title">Quản lý danh mục</span>
+            </a>
+          </li>
 
           <li id="nav-products">
             <a href="./products.html">
-              <span class="icon"
-                ><i class="fa-solid fa-tags"></i></span>
+              <span class="icon">
+                <i class="fa-solid fa-tags"></i>
+              </span>
               <span class="title">Quản lý sản phẩm</span>
             </a>
           </li>
 
           <li id="nav-imports">
             <a href="./imports.html">
-              <span class="icon"
-                ><i class="fa-solid fa-box-open"></i></span>
+              <span class="icon">
+                <i class="fa-solid fa-box-open"></i>
+              </span>
               <span class="title">Phiếu nhập hàng</span>
             </a>
           </li>
 
           <li id="nav-inventory">
             <a href="./inventory.html">
-              <span class="icon"
-                ><i class="fa-solid fa-warehouse"></i></span>
+              <span class="icon">
+                <i class="fa-solid fa-warehouse"></i>
+              </span>
               <span class="title">Quản lý hàng tồn kho</span>
             </a>
           </li>
 
           <li id="nav-orders">
             <a href="./orders.html">
-              <span class="icon"
-                ><i class="fa-solid fa-receipt"></i></span>
+              <span class="icon">
+                <i class="fa-solid fa-receipt"></i>
+              </span>
               <span class="title">Quản lý đơn hàng</span>
             </a>
           </li>
 
           <hr />
 
-          <!-- CHÀO MỪNG: nằm dưới hr và trên Đăng xuất -->
-<li class="welcome-admin-tile" style="margin: 8px 10px 6px">
-  <div
-    style="
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid #2a2f8a;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #1f235a;
-      font-weight: 700;
-    "
-  >
-    <i class="fa-solid fa-user-shield"></i>
-    <span>Chào mừng, Admin</span>
-  </div>
-</li>
+          <!-- Chào mừng Admin -->
+          <li class="welcome-admin-tile" style="margin: 8px 10px 6px">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                border: 1px solid #2a2f8a;
+                border-radius: 12px;
+                background: #ffffff;
+                color: #1f235a;
+                font-weight: 700;
+              "
+            >
+              <i class="fa-solid fa-user-shield"></i>
+              <span id="admin-username">Chào mừng, Admin</span>
+            </div>
+          </li>
 
-
-<li>
-  <a href="#" id="btn-logout-side">
-    <span class="icon">
-      <i class="fa-solid fa-right-from-bracket"></i>
-    </span>
-    <span class="title">Đăng xuất</span>
-  </a>
-</li>
-
+          <li>
+            <a href="#" id="btn-logout-side">
+              <span class="icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
+              </span>
+              <span class="title">Đăng xuất</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
 
     <div class="main">
-      <!-- DASHBOARD CONTENT giữ nguyên demo -->
-      <div id="dashboard-content">
+      <div class="dashboard-page">
+        <!-- HEADER TRONG MAIN -->
+        <div class="dashboard-header">
+          <div>
+            <h1>Bảng điều khiển</h1>
+            <div class="sub">
+              Tổng quan nhanh về lượt xem, đơn hàng và khách hàng của Nobility
+              1800s.
+            </div>
+          </div>
+          <div class="dashboard-actions">
+            <button
+              class="btn primary"
+              type="button"
+              onclick="location.href='./orders.html';"
+            >
+              <i class="fa-solid fa-receipt"></i>
+              <span>Xem đơn hàng</span>
+            </button>
+            <button
+              class="btn"
+              type="button"
+              onclick="location.href='./products.html';"
+            >
+              <i class="fa-solid fa-tags"></i>
+              <span>Quản lý sản phẩm</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- THỐNG KÊ NHANH -->
         <div class="cardBox">
           <div class="card">
             <div>
               <div class="numbers">1,504</div>
               <div class="cardName">Lượt xem theo ngày</div>
             </div>
-            <div class="iconBx"><ion-icon name="eye-outline"></ion-icon></div>
+            <div class="iconBx">
+              <ion-icon name="eye-outline"></ion-icon>
+            </div>
           </div>
+
           <div class="card">
             <div>
               <div class="numbers">80</div>
-              <div class="cardName">Doanh số</div>
+              <div class="cardName">Đơn hàng trong ngày</div>
             </div>
-            <div class="iconBx"><ion-icon name="cart-outline"></ion-icon></div>
+            <div class="iconBx">
+              <ion-icon name="cart-outline"></ion-icon>
+            </div>
           </div>
+
           <div class="card">
             <div>
               <div class="numbers">284</div>
-              <div class="cardName">Bình luận</div>
+              <div class="cardName">Bình luận / đánh giá</div>
             </div>
             <div class="iconBx">
               <ion-icon name="chatbubbles-outline"></ion-icon>
             </div>
           </div>
+
           <div class="card">
             <div>
               <div class="numbers">36.363.363đ</div>
-              <div class="cardName">Doanh thu</div>
+              <div class="cardName">Doanh thu hôm nay</div>
             </div>
-            <div class="iconBx"><ion-icon name="cash-outline"></ion-icon></div>
+            <div class="iconBx">
+              <ion-icon name="cash-outline"></ion-icon>
+            </div>
           </div>
         </div>
 
+        <!-- KHU VỰC BẢNG -->
         <div class="details">
+          <!-- ĐƠN HÀNG GẦN ĐÂY -->
           <div class="recentOrders">
             <div class="cardHeader">
               <h2>Đơn hàng gần đây</h2>
@@ -176,7 +353,7 @@
             <table>
               <thead>
                 <tr>
-                  <td>Tên</td>
+                  <td>Tên sản phẩm</td>
                   <td>Giá</td>
                   <td>Thanh toán</td>
                   <td>Trạng thái</td>
@@ -190,7 +367,7 @@
                   <td><span class="status delivered">Đã vận chuyển</span></td>
                 </tr>
                 <tr>
-                  <td>Sáp vuốt tóc By Vilain Gold Digger</td>
+                  <td>Sáp By Vilain Gold Digger</td>
                   <td>449.000đ</td>
                   <td>Chưa thanh toán</td>
                   <td><span class="status returned">Đã trả hàng</span></td>
@@ -199,7 +376,9 @@
                   <td>Gôm xịt tóc Kevin Murphy Session</td>
                   <td>467.000đ</td>
                   <td>Đã thanh toán</td>
-                  <td><span class="status inPending">Đang chờ xử lý</span></td>
+                  <td>
+                    <span class="status inPending">Đang chờ xử lý</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>Bột tạo phồng Patricks HP1 Hair Powder</td>
@@ -211,13 +390,16 @@
             </table>
           </div>
 
+          <!-- KHÁCH HÀNG GẦN ĐÂY -->
           <div class="recentCustomers">
-            <div class="cardHeader"><h2>Khách hàng gần đây</h2></div>
+            <div class="cardHeader">
+              <h2>Khách hàng gần đây</h2>
+            </div>
             <table>
               <tr>
                 <td width="60px">
                   <div class="imgBx">
-                    <img src="./assets/img/customer/John.jpg" alt="" />
+                    <img src="./assets/img/customer/John.jpg" alt="John" />
                   </div>
                 </td>
                 <td>
@@ -227,7 +409,7 @@
               <tr>
                 <td width="60px">
                   <div class="imgBx">
-                    <img src="./assets/img/customer/David.jpg" alt="" />
+                    <img src="./assets/img/customer/David.jpg" alt="David" />
                   </div>
                 </td>
                 <td>
@@ -237,7 +419,7 @@
               <tr>
                 <td width="60px">
                   <div class="imgBx">
-                    <img src="./assets/img/customer/David.jpg" alt="" />
+                    <img src="./assets/img/customer/David.jpg" alt="David" />
                   </div>
                 </td>
                 <td>
@@ -247,17 +429,7 @@
               <tr>
                 <td width="60px">
                   <div class="imgBx">
-                    <img src="./assets/img/customer/David.jpg" alt="" />
-                  </div>
-                </td>
-                <td>
-                  <h4>David <br /><span>Ý</span></h4>
-                </td>
-              </tr>
-              <tr>
-                <td width="60px">
-                  <div class="imgBx">
-                    <img src="./assets/img/customer/Emily.jpg" alt="" />
+                    <img src="./assets/img/customer/Emily.jpg" alt="Emily" />
                   </div>
                 </td>
                 <td>
@@ -267,59 +439,65 @@
             </table>
           </div>
         </div>
-      </div>
 
-      <!-- Có thể bỏ block dưới nếu tách trang riêng -->
-      <div id="customers-content" style="display: none">
-        <div class="details customer-list">
-          <div class="recentOrders">
-            <div class="cardHeader">
-              <h2>Danh sách Khách hàng</h2>
-              <a class="btn" href="./users.html">Sang trang quản lý</a>
+        <!-- Khối demo khách hàng (ẩn) -->
+        <div id="customers-content" style="display: none">
+          <div class="details customer-list">
+            <div class="recentOrders">
+              <div class="cardHeader">
+                <h2>Danh sách Khách hàng</h2>
+                <a class="btn" href="./users.html">Sang trang quản lý</a>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <td>Tên</td>
+                    <td>Email</td>
+                    <td>Số điện thoại</td>
+                    <td>Trạng thái</td>
+                    <td>Hành động</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>John Doe</td>
+                    <td>john.doe@email.com</td>
+                    <td>0901234567</td>
+                    <td>
+                      <span class="status delivered">Hoạt động</span>
+                    </td>
+                    <td>
+                      <a href="#" class="btn btn-action btn-reset">Reset MK</a>
+                      <a href="#" class="btn btn-action btn-lock">Khóa</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>David</td>
+                    <td>david.ita@email.com</td>
+                    <td>0907654321</td>
+                    <td>
+                      <span class="status returned">Đã khóa</span>
+                    </td>
+                    <td>
+                      <a href="#" class="btn btn-action btn-reset">Reset MK</a>
+                      <a href="#" class="btn btn-action btn-unlock">Mở khóa</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Emily</td>
+                    <td>emily.fr@email.com</td>
+                    <td>0988888888</td>
+                    <td>
+                      <span class="status delivered">Hoạt động</span>
+                    </td>
+                    <td>
+                      <a href="#" class="btn btn-action btn-reset">Reset MK</a>
+                      <a href="#" class="btn btn-action btn-lock">Khóa</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <table>
-              <thead>
-                <tr>
-                  <td>Tên</td>
-                  <td>Email</td>
-                  <td>Số điện thoại</td>
-                  <td>Trạng thái</td>
-                  <td>Hành động</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>John Doe</td>
-                  <td>john.doe@email.com</td>
-                  <td>0901234567</td>
-                  <td><span class="status delivered">Hoạt động</span></td>
-                  <td>
-                    <a href="#" class="btn btn-action btn-reset">Reset MK</a>
-                    <a href="#" class="btn btn-action btn-lock">Khóa</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>David</td>
-                  <td>david.ita@email.com</td>
-                  <td>0907654321</td>
-                  <td><span class="status returned">Đã khóa</span></td>
-                  <td>
-                    <a href="#" class="btn btn-action btn-reset">Reset MK</a>
-                    <a href="#" class="btn btn-action btn-unlock">Mở khóa</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Emily</td>
-                  <td>emily.fr@email.com</td>
-                  <td>0988888888</td>
-                  <td><span class="status delivered">Hoạt động</span></td>
-                  <td>
-                    <a href="#" class="btn btn-action btn-reset">Reset MK</a>
-                    <a href="#" class="btn btn-action btn-lock">Khóa</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
@@ -328,20 +506,15 @@
     <!-- JS TƯƠNG ĐỐI -->
     <script src="./assets/js/main.js"></script>
 
-    <!-- Ionicons CDN -->
-    <script
-      type="module"
-      src="./assets/js/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="./assets/js/ionicons.js"
-    ></script>
+    <!-- Ionicons (TƯƠNG ĐỐI, đã copy về assets/js) -->
+    <script type="module" src="./assets/js/ionicons.esm.js"></script>
+    <script nomodule src="./assets/js/ionicons.js"></script>
 
-    <!-- Đăng xuất (sidebar) -->
+    <!-- Đăng xuất + Điền tên admin -->
     <script>
       (function () {
-        const btn2 = document.getElementById("btn-logout-side"); // link ở sidebar
+        // Đăng xuất sidebar
+        const btn2 = document.getElementById("btn-logout-side");
         if (btn2) {
           btn2.addEventListener("click", function (e) {
             e.preventDefault();
@@ -349,6 +522,19 @@
             location.href = "./login.html";
           });
         }
+
+        // Điền tên admin
+        try {
+          const u = JSON.parse(
+            sessionStorage.getItem("session.user") || "null"
+          );
+          if (!u) return;
+          const el = document.getElementById("admin-username");
+          if (!el) return;
+          el.textContent =
+            "Chào mừng, " +
+            (u.fullname || u.name || u.username || u.email || "Admin");
+        } catch {}
       })();
     </script>
   </body>

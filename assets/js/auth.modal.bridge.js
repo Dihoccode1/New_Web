@@ -29,7 +29,7 @@
       topbarRight.innerHTML = `
   <div class="welcome-user">
     <span class="welcome-message">Chào mừng</span>
-    <a class="user-name" href="/account/profile.html">${escapeHtml(
+    <a class="user-name" href="../../account/profile.html">${escapeHtml(
       displayName
     )}</a>
   </div>
@@ -38,8 +38,8 @@
     } else {
       // --- KHI CHƯA ĐĂNG NHẬP ---
       topbarRight.innerHTML = `
-        <a href="/account/register.html" class="btn btn-outline">ĐĂNG KÝ</a>
-        <a href="/account/login.html" class="btn btn-primary">ĐĂNG NHẬP</a>
+        <a href="../../account/register.html" class="btn btn-outline">ĐĂNG KÝ</a>
+        <a href="../../account/login.html" class="btn btn-primary">ĐĂNG NHẬP</a>
       `;
     }
     updateCartBadge();

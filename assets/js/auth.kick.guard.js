@@ -11,12 +11,12 @@
     if (a && a.href) return a.href;
     // các fallback phổ biến (đổi theo site bạn)
     var candidates = [
-      "/account/login.html",
+      "../../account/login.html",
       "/dangnhap.html",
-      "/login.html",
-      "./account/login.html",
+      "../../account/login.html",
+      "../../account/login.html",
       "./dangnhap.html",
-      "./login.html",
+      "../../account/login.html",
     ];
     return candidates[0];
   }

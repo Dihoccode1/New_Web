@@ -208,7 +208,7 @@
         alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
         const back = location.pathname + location.search + location.hash;
         location.href =
-          "/account/login.html?redirect=" + encodeURIComponent(back);
+          "../../account/login.html?redirect=" + encodeURIComponent(back);
         return;
       }
 
@@ -248,7 +248,7 @@
         .map(
           (r) => `
         <div class="col-6 col-md-4 related-col">
-          <a href="/sanpham/pages/product_detail.html?id=${encodeURIComponent(
+          <a href="../../sanpham/pages/product_detail.html?id=${encodeURIComponent(
             r.id
           )}" class="related-card text-reset">
             <div class="img-wrap">

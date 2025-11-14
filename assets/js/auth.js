@@ -30,7 +30,7 @@
   // 💡 SỬA: trỏ đúng trang login của bạn
   function redirectToLogin() {
     const back = makeBackParam();
-    w.location.href = "/account/login.html" + (back ? "?redirect=" + back : "");
+    w.location.href = "../../account/login.html" + (back ? "?redirect=" + back : "");
   }
 
   function escapeHtml(s) {
@@ -168,7 +168,7 @@
             '</strong> · <a href="#" data-logout>Đăng xuất</a>';
         } else {
           chip.innerHTML =
-            '<a href="/account/login.html">Đăng nhập</a> / <a href="/account/register.html">Đăng ký</a>';
+            '<a href="../../account/login.html">Đăng nhập</a> / <a href="../../account/register.html">Đăng ký</a>';
         }
       }
     },

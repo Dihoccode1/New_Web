@@ -143,9 +143,6 @@ function render(list) {
           <a href="#" class="btn btn-action" data-act="toggle" data-id="${
             c.id
           }">${toggleLabel}</a>
-          <a href="#" class="btn btn-action" data-act="remove" data-id="${
-            c.id
-          }" style="background:#ef4444;">Xóa</a>
         </td>
       </tr>
     `;

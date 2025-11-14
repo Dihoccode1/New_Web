@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css">
+    <!-- Font Awesome (relative path) -->
+    <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css" />
 
     <!-- GUARD: chưa đăng nhập admin -> quay về ./login.html -->
     <script>
@@ -21,13 +22,13 @@
 
     <title>Quản lý người dùng | Nobility 1800s Admin</title>
 
-    <!-- CSS admin chung -->
+    <!-- CSS admin chung (relative) -->
     <link rel="stylesheet" href="./assets/css/style.css" />
 
-    <!-- Font Awesome (dùng CDN cho chắc, khỏi lo path) -->
+    <!-- Font Awesome (relative, không dùng link tuyệt đối) -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      href="../fontawesome-free-6.7.2-web/css/all.min.css"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
@@ -314,8 +315,7 @@
             <div class="muted">
               Đổi mật khẩu & khóa tài khoản sẽ ép người dùng đăng nhập lại.
               <span class="pill-note">
-                <i class="fa-solid fa-shield-halved"></i>
-                Real-time force logout
+                <i class=""></i>
               </span>
             </div>
           </div>
@@ -323,10 +323,6 @@
             <button class="btn primary" id="btnAdd">
               <i class="fa-solid fa-user-plus"></i>
               <span>Thêm tài khoản</span>
-            </button>
-            <button class="btn" id="btnExport">
-              <i class="fa-solid fa-file-arrow-down"></i>
-              <span>Xuất JSON</span>
             </button>
           </div>
         </div>
@@ -411,8 +407,8 @@
             <div>
               <label class="small">Vai trò</label>
               <select class="input" id="uRole">
-                <option value="member">Member</option>
-                <option value="admin">Admin</option>
+                <option value="member">Khách hàng</option>
+                <option value="admin">Quản trị viên</option>
               </select>
             </div>
           </div>
@@ -432,6 +428,7 @@
     </div>
 
     <!-- JS chung admin -->
+        <!-- JS chung admin -->
     <script src="./assets/js/main.js"></script>
 
     <script>
@@ -465,6 +462,31 @@
         }
         function toast(msg) {
           alert(msg);
+        }
+
+        // Chuẩn hóa chuỗi để tìm kiếm (bỏ dấu + lowercase)
+        function normalizeText(s) {
+          return String(s || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        // So khớp 1 field với query:
+        // - Nếu query toàn số: dùng includes (hữu ích cho SĐT)
+        // - Nếu query là chữ: so từ bắt đầu (startsWith) theo từng "từ"
+        function matchField(field, qNorm) {
+          const t = normalizeText(field);
+          if (!t) return false;
+
+          // query toàn số -> cho phép includes (09, 0903...)
+          if (/^\d+$/.test(qNorm)) {
+            return t.includes(qNorm);
+          }
+
+          // tách theo khoảng trắng, @, ., _, -
+          const parts = t.split(/[\s@._-]+/).filter(Boolean);
+          return parts.some((p) => p.startsWith(qNorm));
         }
 
         // Gộp dữ liệu từ nhiều nguồn
@@ -666,21 +688,23 @@
         }
 
         function render() {
-          const q = (searchBox.value || "").trim().toLowerCase();
+          const qRaw = (searchBox.value || "").trim();
+          const qNorm = normalizeText(qRaw);
           const status = filterStatus.value;
           let list = getUsersMerged();
 
-          if (q) {
-            list = list.filter((u) =>
-              [u.name, u.email, u.phone].some((x) =>
-                String(x || "").toLowerCase().includes(q)
-              )
-            );
+          if (qNorm) {
+            list = list.filter((u) => {
+              return (
+                matchField(u.name, qNorm) ||
+                matchField(u.email, qNorm) ||
+                matchField(u.phone, qNorm)
+              );
+            });
           }
+
           if (status !== "all") {
-            list = list.filter(
-              (u) => (u.status || "active") === status
-            );
+            list = list.filter((u) => (u.status || "active") === status);
           }
 
           if (!list.length) {
@@ -693,12 +717,17 @@
             .map((u) => {
               const isLocked = u.status === "locked";
               const email = esc(u.email || "");
+
+              const roleCode = u.role || "member";
+              const roleLabel =
+                roleCode === "admin" ? "Quản trị viên" : "Khách hàng";
+
               return `
               <tr>
                 <td><strong>${esc(u.name || "")}</strong></td>
                 <td>${email}</td>
                 <td>${esc(u.phone || "")}</td>
-                <td><span class="chip">${esc(u.role || "member")}</span></td>
+                <td><span class="chip">${esc(roleLabel)}</span></td>
                 <td>
                   <span class="status ${isLocked ? "locked" : "active"}">
                     ${isLocked ? "Đã khóa" : "Đang hoạt động"}
@@ -729,18 +758,6 @@
         // search / filter
         searchBox.addEventListener("input", render);
         filterStatus.addEventListener("change", render);
-
-        // Export JSON
-        document.getElementById("btnExport").addEventListener("click", () => {
-          const data = { users: getUsersMerged() };
-          const blob = new Blob([JSON.stringify(data, null, 2)], {
-            type: "application/json",
-          });
-          const a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.download = "users-export.json";
-          a.click();
-        });
 
         // Modal
         const modal = document.getElementById("modalUser");
@@ -860,14 +877,24 @@
             if (!u) return;
             const el = document.getElementById("admin-username");
             if (!el) return;
-            el.textContent = "Chào mừng, Admin";
-              u.fullname || u.name || u.username || u.email || "Admin";
+            el.textContent =
+              "Chào mừng, " +
+              (u.fullname || u.name || u.username || u.email || "Admin");
           } catch {}
         })();
 
         // Render lần đầu
         render();
+
+        // Nghe thay đổi localStorage từ TAB KHÁC -> render lại (không reload trang)
+        window.addEventListener("storage", (e) => {
+          if (!e.key) return;
+          if ([LS_USERS, LS_PROFILES, BS_USERS].includes(e.key)) {
+            render();
+          }
+        });
       })();
     </script>
+
   </body>
 </html>

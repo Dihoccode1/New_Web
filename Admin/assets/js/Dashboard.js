@@ -171,14 +171,13 @@
       <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9">${fmtNum(p.stock ?? 0)}</td>
       <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9">
         <button class="btn js-edit" data-id="${p.id}">Sửa</button>
-        <button class="btn js-del" data-id="${p.id}">Xóa</button>
+
       </td>
     </tr>`).join('');
     return `<div class="container-fluid">
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px">
         <button id="btnAdd" class="btn">+ Thêm sản phẩm</button>
         <button id="btnImportSeed" class="btn">Nhập từ SEED</button>
-        <button id="btnExportJSON" class="btn">Xuất JSON</button>
       </div>
       ${table(['#','Sản phẩm','Danh mục','Giá','Tồn','Hành động'], rows)}
     </div>`;
@@ -231,7 +230,6 @@
     return `<div class="container-fluid">
       <div style="margin:8px 0 12px">
         <button id="btnGenDemoOrders" class="btn">+ Tạo 5 đơn demo</button>
-        <button id="btnClearOrders" class="btn">Xóa đơn</button>
       </div>
       ${table(['#','Mã đơn','Ngày','Trạng thái','Tổng tiền'], rows)}
     </div>`;

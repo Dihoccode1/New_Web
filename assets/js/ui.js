@@ -16,7 +16,7 @@ window.SVUI = (function () {
   const isOOS = (p) => normalizeBadge(p) === "out_of_stock" || (typeof p.stock === 'number' && p.stock <= 0);
 
   // Luôn dùng đường dẫn tuyệt đối để tránh lặp cấp thư mục
-  const productDetailUrl = (p) => `/sanpham/pages/product_detail.html?id=${encodeURIComponent(p.id)}`;
+  const productDetailUrl = (p) => `../../sanpham/pages/product_detail.html?id=${encodeURIComponent(p.id)}`;
 
   const badgeHTML = (p) => {
     const b = normalizeBadge(p);

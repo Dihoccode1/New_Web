@@ -15,7 +15,12 @@
   function normalizeBadge(p) {
     if (!p || !p.badge) return '';
     const b = String(p.badge).toLowerCase().trim();
-    const map = { sale: 'sale', new: 'new', oos: 'out_of_stock', out_of_stock: 'out_of_stock' };
+    const map = {
+      sale: 'sale',
+      new: 'new',
+      oos: 'out_of_stock',
+      out_of_stock: 'out_of_stock'
+    };
     return map[b] || '';
   }
 
@@ -71,20 +76,39 @@
   // ===== Cart (localStorage THEO EMAIL) =====
   const CART_KEY_PREFIX = 'sv_cart_user_'; // prefix + email
 
+  // Lấy email user hiện tại từ AUTH (tương thích nhiều phiên bản)
+  function getCurrentUserEmail() {
+    try {
+      if (w.AUTH?.getCurrentUser) {
+        const u = w.AUTH.getCurrentUser();
+        if (u && u.email) return String(u.email).toLowerCase();
+      }
+      if (w.AUTH?.currentUser && w.AUTH.currentUser.email) {
+        return String(w.AUTH.currentUser.email).toLowerCase();
+      }
+      // fallback cho bản cũ nếu có AUTH.user
+      if (w.AUTH?.user && w.AUTH.user.email) {
+        return String(w.AUTH.user.email).toLowerCase();
+      }
+    } catch (e) {
+      console.warn('[SVStore] Lỗi lấy email user:', e);
+    }
+    return null;
+  }
+
   function getCartKey() {
-    // Lấy email người dùng đang đăng nhập
-    const user = w.AUTH?.user;
-    if (!user || !user.email) return null;
-    return CART_KEY_PREFIX + user.email.toLowerCase();
+    const email = getCurrentUserEmail();
+    if (!email) return null;
+    return CART_KEY_PREFIX + email;
   }
 
   const getCart = () => {
     const key = getCartKey();
     if (!key) return []; // chưa đăng nhập = giỏ rỗng
-    try { 
-      return JSON.parse(localStorage.getItem(key) || '[]'); 
-    } catch { 
-      return []; 
+    try {
+      return JSON.parse(localStorage.getItem(key) || '[]');
+    } catch {
+      return [];
     }
   };
 
@@ -96,8 +120,8 @@
 
   // phát sự kiện toàn cục mỗi khi giỏ đổi
   function emitCartChanged() {
-    try { 
-      window.dispatchEvent(new CustomEvent('cart:changed')); 
+    try {
+      window.dispatchEvent(new CustomEvent('cart:changed'));
     } catch (_) {}
   }
 
@@ -109,7 +133,7 @@
     qty = clampNonNegative(qty) || 1;
     const cart = getCart();
     const i = cart.findIndex(x => x.id === id);
-    if (i > -1) cart[i].qty += qty; 
+    if (i > -1) cart[i].qty += qty;
     else cart.push({ id, qty });
     saveCart(cart);
     emitCartChanged();
@@ -154,13 +178,27 @@
     }, 0);
   }
 
+  // tiện cho trang khác: lấy số lượng 1 sản phẩm trong giỏ
+  function getCartItemQty(id) {
+    const cart = getCart();
+    const found = cart.find(x => String(x.id) === String(id));
+    return found ? (found.qty || 0) : 0;
+  }
+
   w.SVStore = {
-    fmtVND, toNumber, normalizeBadge, getAllProducts,
+    fmtVND,
+    toNumber,
+    normalizeBadge,
+    getAllProducts,
     query(opts = {}) {
       const {
-        q = '', category = 'all',
-        minPrice = '', maxPrice = '',
-        sort = '', page = 1, perPage = 12,
+        q = '',
+        category = 'all',
+        minPrice = '',
+        maxPrice = '',
+        sort = '',
+        page = 1,
+        perPage = 12,
         featured = null
       } = opts;
 
@@ -168,18 +206,30 @@
       const baseByFeatured = base.filter(p =>
         featured === null ? true : (!!p.featured === !!featured)
       );
-      const filtered = filterProducts(baseByFeatured, { q, category, minPrice, maxPrice });
+      const filtered = filterProducts(baseByFeatured, {
+        q,
+        category,
+        minPrice,
+        maxPrice
+      });
       const sorted = sortProducts(filtered, sort);
       return paginate(sorted, page, perPage);
     },
 
     // Cart API
-    getCart, addToCart, setQty, removeFromCart, clearCart, count, total
+    getCart,
+    addToCart,
+    setQty,
+    removeFromCart,
+    clearCart,
+    count,
+    total,
+    getCartItemQty
   };
 
   // Alias cho backward compat
   window.SVCart = {
-    add: (id, qty=1) => {
+    add: (id, qty = 1) => {
       if (!w.AUTH?.loggedIn) {
         console.warn('[SVCart] Chưa đăng nhập');
         return;

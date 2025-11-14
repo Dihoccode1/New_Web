@@ -247,9 +247,6 @@ function render(list) {
           <a href="#" class="btn btn-action" data-act="hide"   data-id="${
             p.id
           }">${hideLabel}</a>
-          <a href="#" class="btn btn-action" data-act="remove" data-id="${
-            p.id
-          }" style="background:#ef4444;">Xóa</a>
         </td>
       </tr>`;
     })

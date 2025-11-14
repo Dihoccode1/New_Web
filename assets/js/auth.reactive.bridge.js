@@ -51,7 +51,7 @@
     }catch(_){}
     try{ alert(msg || 'Phiên đã bị đăng xuất.'); }catch(_){}
     try{
-      var url = '/account/login.html?reason=' + encodeURIComponent(msg||'logout');
+      var url = '../../account/login.html?reason=' + encodeURIComponent(msg||'logout');
       window.location.href = url;
     }catch(_){ window.location.reload(); }
   }

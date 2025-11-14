@@ -139,6 +139,7 @@
         if (w.AUTH && w.AUTH.ready) makeWelcomeClickable();
       })(window, document);
     </script>
+
     <!-- ===== PAGE ===== -->
     <div class="container py-4">
       <h3 class="mb-3">Thanh toán</h3>
@@ -301,9 +302,9 @@
                       id="districtSelect"
                       required
                     ></select>
+                    <!-- ĐÃ SỬA: BỎ name="district" để tránh trùng -->
                     <input
                       class="form-control mt-2 d-none"
-                      name="district"
                       id="districtInput"
                     />
                     <div class="invalid-feedback">
@@ -326,9 +327,9 @@
                       name="ward"
                       id="wardSelect"
                     ></select>
+                    <!-- ĐÃ SỬA: BỎ name="ward" để tránh trùng -->
                     <input
                       class="form-control mt-2 d-none"
-                      name="ward"
                       id="wardInput"
                     />
                   </div>
@@ -577,7 +578,9 @@
               </div>
               <nav class="fot_menu_copyright">
                 <ul class="ul_menu_fot">
-                  <li><a href="./index.html" title="Trang chủ">Trang chủ</a></li>
+                  <li>
+                    <a href="./index.html" title="Trang chủ">Trang chủ</a>
+                  </li>
                   <li>
                     <a href="./gioithieu.html" title="Giới thiệu">Giới thiệu</a>
                   </li>
@@ -648,14 +651,12 @@
     <script src="./assets/js/auth.security.enforcer.js"></script>
     <script src="./assets/js/auth.localstorage.bridge.js"></script>
     <script src="./assets/js/auth.reactive.guard.v2.js"></script>
-    <!-- rồi mới đến store.js, ui.js, products.* ... -->
-
-    <script src="./assets/js/auth.security.enforcer.js"></script>
     <script src="./assets/js/auth.modal.bridge.js"></script>
 
     <script src="./assets/js/products.seed.js"></script>
     <script src="./assets/js/store.js"></script>
     <script src="./assets/js/ui.js"></script>
+
     <script>
       (function () {
         const money = (n) => (Number(n) || 0).toLocaleString("vi-VN") + "₫";
@@ -796,7 +797,7 @@
           els.savedPhone.textContent = p.phone || "";
           const parts = [];
           if (p.address) parts.push(p.address);
-          if (p.ward) parts.push(p.ward); /* thêm ward để hiển thị đủ */
+          if (p.ward) parts.push(p.ward);
           if (p.district) parts.push(p.district);
           if (p.city) parts.push(p.city);
           els.savedFullAddress.textContent = parts.join(", ");
@@ -843,8 +844,8 @@
                   0
                 );
           els.sumSubtotal.textContent = money(subtotal);
-          els.sumShip.textContent = money(30000);
-          els.sumGrand.textContent = money(subtotal + 30000);
+          els.sumShip.textContent = money(shipFee);
+          els.sumGrand.textContent = money(subtotal + shipFee);
         }
 
         /* Toggle saved/new address */
@@ -903,6 +904,8 @@
             wards.map((w) => `<option value="${w}">${w}</option>`).join("");
           els.wardInput.value = "";
         }
+
+        /* Toggle nhập tay / chọn list cho Quận */
         els.toggleDist.addEventListener("click", () => {
           const nowHidden = els.distInput.classList.toggle("d-none");
           const manual = !nowHidden;
@@ -922,6 +925,8 @@
             els.distInput.required = false;
           }
         });
+
+        /* Toggle nhập tay / chọn list cho Phường */
         els.toggleWard.addEventListener("click", () => {
           const nowHidden = els.wardInput.classList.toggle("d-none");
           const manual = !nowHidden;
@@ -937,6 +942,7 @@
             els.wardSel.setAttribute("name", "ward");
           }
         });
+
         function updateBiz() {
           els.bizBlock.style.display =
             els.addressType.value === "business" ? "block" : "none";
@@ -968,7 +974,6 @@
         }
 
         /* Đặt hàng */
-        /* Đặt hàng – LƯU USER + PHÁT TÍN HIỆU CHO ADMIN */
         els.btnPlace.addEventListener("click", () => {
           if (!window.AUTH?.loggedIn) {
             alert("Vui lòng đăng nhập để đặt hàng!");
@@ -1067,7 +1072,7 @@
             typeof window.SVStore?.total === "function"
               ? window.SVStore.total(products)
               : items.reduce((s, it) => s + it.price * it.qty, 0);
-          const grand = subtotal + 30000;
+          const grand = subtotal + shipFee;
 
           maybeSaveDefaultAddress(shipping);
 
@@ -1078,7 +1083,7 @@
             created_at: new Date().toISOString(),
             items,
             subtotal,
-            ship: 30000,
+            ship: shipFee,
             total: grand,
             shipping,
             payMethod,
@@ -1098,7 +1103,7 @@
           const flat = JSON.parse(localStorage.getItem(FLAT_KEY) || "[]");
           flat.unshift({
             id: order.id,
-            code: order.id, // hoặc tạo mã khác nếu bạn muốn
+            code: order.id,
             date: order.created_at.slice(0, 10),
             status: order.status,
             total: order.total,
@@ -1137,7 +1142,6 @@
           refreshBadge();
           fillCities();
           updateBiz();
-          /* Đồng bộ hiển thị khối chuyển khoản theo radio hiện tại */
           els.bankInfo.style.display = els.pmBank.checked ? "block" : "none";
         }
         if (window.AUTH?.check) {
@@ -1148,7 +1152,7 @@
       })();
     </script>
 
-    <!-- Khối JS xử lý điện thoại: đã tối giản, KHÔNG cần xóa gì thêm -->
+    <!-- Khối JS xử lý điện thoại -->
     <script>
       (function () {
         const form = document.getElementById("formNewAddr");
@@ -1179,10 +1183,12 @@
             phoneEl.reportValidity();
             return;
           }
-          phoneEl.value = normalizeVNPhone(v); // lưu dạng 0xxxxxxxxx
+          phoneEl.value = normalizeVNPhone(v);
         });
       })();
     </script>
+
+    <!-- Footer accordion mobile -->
     <script>
       (function () {
         function isMobile() {
@@ -1193,7 +1199,6 @@
           document
             .querySelectorAll(".site-footer .widget-ft")
             .forEach((box, i) => {
-              // Mặc định: đóng hết, riêng cột cuối "Liên hệ" mở sẵn (tuỳ bạn)
               if (isMobile()) {
                 if (
                   box
@@ -1207,18 +1212,17 @@
                   box.classList.remove("is-open");
                 }
               } else {
-                box.classList.add("is-open"); // PC luôn mở
+                box.classList.add("is-open");
               }
             });
         }
 
-        // Toggle khi bấm tiêu đề (chỉ mobile)
         function bindClick() {
           document
             .querySelectorAll(".site-footer .widget-ft .title-menu")
             .forEach((title) => {
               title.addEventListener("click", () => {
-                if (!isMobile()) return; // PC không toggle
+                if (!isMobile()) return;
                 const box = title.closest(".widget-ft");
                 if (!box) return;
                 box.classList.toggle("is-open");
@@ -1226,12 +1230,10 @@
             });
         }
 
-        // Khởi tạo
         document.addEventListener("DOMContentLoaded", () => {
           setInitialState();
           bindClick();
         });
-        // Đổi trạng thái khi resize giữa mobile/PC
         window.addEventListener("resize", setInitialState);
       })();
     </script>

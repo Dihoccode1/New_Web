@@ -814,7 +814,7 @@
       </div>
     </footer>
 
-    <!-- Các file JS nền của m -->
+       <!-- Các file JS nền của m -->
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/auth.security.enforcer.js"></script>
     <script src="../assets/js/auth.modal.bridge.js"></script>
@@ -834,53 +834,55 @@
       })();
     </script>
 
+    <!-- Store + UI (giỏ hàng, badge, header) -->
     <script src="../assets/js/store.js"></script>
     <script src="../assets/js/ui.js"></script>
     <script src="../assets/js/auth.frontend.js"></script>
 
     <!-- Vendor JS -->
-    <script
-      src="../assets/js/jquery-3.6.0.min.js"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="../assets/js/bootstrap.bundle.min.js"
-      crossorigin="anonymous"
-    ></script>
+    <script src="../assets/js/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="../assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="../assets/js/auth.kick.guard.js"></script>
 
     <!-- TOÀN BỘ JS TRANG SẢN PHẨM -->
     <script>
       (function (w, d) {
-        /* 1. search ở header -> chuyển sang đúng trang sản phẩm */
+        /* 1. search ở header -> chuyển sang đúng trang sản phẩm (LINK TƯƠNG ĐỐI) */
         (function initHeaderSearch() {
           const form = d.querySelector(".search-bar");
           if (!form) return;
+
           function getProductsURL() {
             const a =
               d.querySelector("nav.main-nav a.js-products-url") ||
-              d.querySelector('nav.main-nav a[href*="/sanpham"]');
+              d.querySelector('nav.main-nav a[href*="sanpham"]');
             return a && a.getAttribute("href")
-              ? a.getAttribute("href")
+              ? a.getAttribute("href").trim()
               : "./sanpham.html";
           }
-          form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            const input = form.querySelector(
-              'input[name="query"], input[name="q"]'
-            );
-            const q = ((input && input.value) || "")
-              .trim()
-              .replace(/\s+/g, " ");
-            const raw = getProductsURL();
-            const url = new URL(raw, w.location.origin);
-            if (q) url.searchParams.set("q", q);
-            else url.searchParams.delete("q");
-            w.location.href = url.pathname + (url.search ? url.search : "");
-          });
+
+          form.addEventListener(
+            "submit",
+            function (e) {
+              e.preventDefault();
+              const input = form.querySelector(
+                'input[name="query"], input[name="q"]'
+              );
+              const q = ((input && input.value) || "")
+                .trim()
+                .replace(/\s+/g, " ");
+
+              const raw = getProductsURL(); // ví dụ: "./sanpham.html" hoặc "../sanpham.html"
+              const base = raw.split("?")[0].split("#")[0];
+              const href = q ? base + "?q=" + encodeURIComponent(q) : base;
+
+              w.location.href = href; // luôn là đường link tương đối
+            },
+            { passive: false }
+          );
         })();
 
-        /* 2. cho chỗ chào mừng click được */
+        /* 2. chỗ chào mừng click được -> profile */
         (function () {
           const el =
             d.querySelector(".welcome-user") ||
@@ -916,23 +918,15 @@
           String(s || "").replace(
             /[&<>"']/g,
             (m) =>
-              ({
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;",
-              }[m] || m)
+              ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[
+                m
+              ] || m)
           );
 
+        /* ====== STOCK ====== */
         function getStock(p) {
           const raw =
-            p.stock ??
-            p.qty ??
-            p.quantity ??
-            p.inventory ??
-            p.quantity_in_stock ??
-            0;
+            p.stock ?? p.qty ?? p.quantity ?? p.inventory ?? p.quantity_in_stock ?? 0;
           const n = Number(raw);
           return isNaN(n) ? 0 : n;
         }
@@ -1057,8 +1051,8 @@
               <div class="product-box ${out ? "is-out" : ""}">
                 <div class="product-thumbnail">
                   <a class="image_link" href="${PRODUCT_DETAIL_URL}?id=${encodeURIComponent(
-            p.id
-          )}">
+                    p.id
+                  )}">
                     <img src="${esc(img)}" alt="${esc(p.name)}" />
                   </a>
                   ${
@@ -1090,8 +1084,8 @@
                 <div class="product-info a-left">
                   <h3 class="product-name">
                     <a href="${PRODUCT_DETAIL_URL}?id=${encodeURIComponent(
-            p.id
-          )}">${esc(p.name)}</a>
+                      p.id
+                    )}">${esc(p.name)}</a>
                   </h3>
                   <div class="price-box">
                     <span class="price product-price">${fmt(p.price)}</span>
@@ -1255,21 +1249,7 @@
           applyFilters();
         })();
 
-        /* 9. click phân trang */
-        d.addEventListener("click", (e) => {
-          const a = e.target.closest("#pagination .page-link");
-          if (!a) return;
-          e.preventDefault();
-          const p = Number(a.getAttribute("data-page"));
-          if (p && !isNaN(p)) {
-            state.page = p;
-            renderPage();
-            const top = d.querySelector(".page-main")?.offsetTop || 0;
-            w.scrollTo({ top, behavior: "smooth" });
-          }
-        });
-
-        /* 10. add to cart (bắt đăng nhập + check tồn) */
+        /* 9. ADD TO CART – GIỚI HẠN = TỒN KHO */
         function getCurrentUserEmail() {
           try {
             if (w.AUTH?.getCurrentUser)
@@ -1283,17 +1263,14 @@
           location.href =
             "../account/login.html?redirect=" + encodeURIComponent(back);
         }
+
         function getProductById(id) {
           const list = getAllProducts();
           return list.find((p) => String(p.id) === String(id)) || null;
         }
+
+        // Lấy số lượng hiện có trong giỏ cho 1 sản phẩm
         function getCartQty(id) {
-          try {
-            if (w.SVStore?.getCartItemQty) {
-              const n = Number(w.SVStore.getCartItemQty(id) || 0);
-              if (!isNaN(n)) return n;
-            }
-          } catch {}
           try {
             if (w.SVStore?.getCart) {
               const cart = w.SVStore.getCart() || [];
@@ -1303,10 +1280,11 @@
               if (f) return Number(f.qty ?? f.quantity ?? 0) || 0;
             }
           } catch {}
+          // fallback: theo email
           try {
             const email = getCurrentUserEmail();
             if (email) {
-              const key = "sv_cart_user_" + email;
+              const key = "sv_cart_user_" + email.toLowerCase();
               const cart = JSON.parse(localStorage.getItem(key) || "[]");
               const f = cart.find(
                 (i) => String(i.id ?? i.productId) === String(id)
@@ -1316,29 +1294,35 @@
           } catch {}
           return 0;
         }
+
+        // Thêm 1 sp vào giỏ nhưng không vượt quá tồn kho
         function addToCartWithCheck(id) {
           const p = getProductById(id);
           if (!p) {
             alert("Sản phẩm không tồn tại hoặc đã bị xoá.");
-            return;
+            return false;
           }
           const stock = getStock(p);
           if (stock <= 0) {
             alert("Sản phẩm đã hết hàng.");
-            return;
+            return false;
           }
           const inCart = getCartQty(id);
           if (inCart >= stock) {
             alert("Bạn đã thêm tối đa số lượng hiện có.");
-            return;
+            return false;
           }
+
+          // Gọi API giỏ hàng chung
           if (w.SVStore?.addToCart) {
             w.SVStore.addToCart(id, 1);
-            w.dispatchEvent(new CustomEvent("cart:changed"));
-            w.SVUI?.updateCartCount?.();
+          } else if (w.SVCart?.add) {
+            w.SVCart.add(id, 1);
           } else {
             alert("Chưa cấu hình giỏ hàng.");
+            return false;
           }
+          return true;
         }
 
         d.addEventListener(
@@ -1348,7 +1332,9 @@
               ".btn-add-cart, .btn-cart, [data-add-to-cart], .js-add-to-cart, a.quick-add"
             );
             if (!btn) return;
+
             e.preventDefault();
+            e.stopPropagation(); // chặn handler add-to-cart khác (trong ui.js) chạy thêm lần nữa
 
             const email = getCurrentUserEmail();
             const logged =
@@ -1360,17 +1346,27 @@
               return;
             }
 
-            let id =
-              btn.dataset.id || (btn.getAttribute("href") || "").includes("id=")
-                ? new URL(
-                    btn.getAttribute("href"),
-                    location.origin
-                  ).searchParams.get("id")
-                : "";
+            let id = btn.dataset.id || "";
+            if (!id) {
+              const href = btn.getAttribute("href") || "";
+              if (href.includes("id=")) {
+                try {
+                  id = new URL(href, location.origin).searchParams.get("id") || "";
+                } catch {}
+              }
+            }
             if (!id) return;
 
-            addToCartWithCheck(id);
+            const before = getCartQty(id); // trước khi thêm
+            const ok = addToCartWithCheck(id); // có thể ALERT & không thêm nếu đã max
+            const after = getCartQty(id); // sau khi thử thêm
 
+            if (!ok || after <= before) {
+              // hoặc lỗi, hoặc đã max → không show "Đã thêm"
+              return;
+            }
+
+            // UI feedback: chỉ khi THỰC SỰ thêm được
             const prev = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-check"></i> Đã thêm';
@@ -1396,6 +1392,7 @@
             applyFilters();
           }
         });
+
         w.addEventListener("cart:changed", () => w.SVUI?.updateCartCount?.());
       })(window, document);
     </script>
