@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán</title>
+
+    <!-- CSS / Bootstrap / Icons -->
+    <link
+      rel="stylesheet"
+      href="./fontawesome-free-6.7.2-web/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="./bootstrap-4.6.2-dist/css/bootstrap.css"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      .title {
+        margin-top: 30px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .card-header h4 {
+        font-size: 18px;
+        margin-bottom: 0;
+      }
+
+      .form-check-label {
+        font-weight: 500;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <div class="title">Tiến hành Thanh toán</div>
+      <div class="row">
+        <!-- CỘT TRÁI: thông tin giao hàng + thanh toán -->
+        <div class="col-lg-8">
+          <form id="checkout-form">
+            <!-- 1. Địa chỉ giao hàng -->
+            <div class="card mb-4">
+              <div class="card-header bg-dark text-white">
+                <h4>
+                  <i class="fa-solid fa-location-dot"></i> 1. Địa chỉ Giao hàng
+                </h4>
+              </div>
+              <div class="card-body" id="delivery-address-selection">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="address-option"
+                    id="address-existing"
+                    value="existing"
+                    checked
+                  />
+                  <label class="form-check-label" for="address-existing"
+                    >Sử dụng địa chỉ từ tài khoản</label
+                  >
+                  <p class="text-muted small ml-4" id="account-address-text">
+                    <!-- sẽ được điền bằng JS từ hồ sơ user -->
+                    123 Đường Nguyễn Huệ, Quận 1, TP.HCM
+                  </p>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="address-option"
+                    id="address-new"
+                    value="new"
+                  />
+                  <label class="form-check-label" for="address-new"
+                    >Nhập địa chỉ giao hàng mới</label
+                  >
+                </div>
+
+                <div
+                  id="new-address-form"
+                  style="
+                    display: none;
+                    margin-top: 15px;
+                    border: 1px solid #ddd;
+                    padding: 15px;
+                    border-radius: 5px;
+                  "
+                >
+                  <input
+                    id="ship-fullname"
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="*Họ tên người nhận"
+                  />
+                  <input
+                    id="ship-phone"
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="*Số điện thoại"
+                  />
+                  <textarea
+                    id="ship-address"
+                    class="form-control"
+                    rows="2"
+                    placeholder="*Địa chỉ chi tiết (Số nhà, đường, phường/xã, tỉnh/thành phố)"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Phương thức thanh toán -->
+            <div class="card mb-4">
+              <div class="card-header bg-dark text-white">
+                <h4>
+                  <i class="fa-solid fa-credit-card"></i> 2. Phương thức Thanh
+                  toán
+                </h4>
+              </div>
+              <div class="card-body" id="payment-method-selection">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="payment-method"
+                    id="payment-cash"
+                    value="cash"
+                    checked
+                  />
+                  <label class="form-check-label" for="payment-cash"
+                    >Thanh toán khi nhận hàng (COD/Tiền mặt)</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="payment-method"
+                    id="payment-transfer"
+                    value="transfer"
+                  />
+                  <label class="form-check-label" for="payment-transfer"
+                    >Chuyển khoản Ngân hàng</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="payment-method"
+                    id="payment-online"
+                    value="online"
+                  />
+                  <label class="form-check-label" for="payment-online"
+                    >Thanh toán Trực tuyến (Chưa xử lý)</label
+                  >
+                </div>
+
+                <div id="payment-info-block" class="mt-3"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- CỘT PHẢI: tóm tắt đơn -->
+        <div class="col-lg-4">
+          <div class="card p-3 bg-light">
+            <h4>3. Tóm tắt Đơn đặt hàng</h4>
+            <hr />
+            <p id="summary-total-products">Tổng tiền hàng: 0₫</p>
+            <p>
+              Phí vận chuyển:
+              <span class="text-success font-weight-bold">Miễn phí</span>
+            </p>
+            <hr />
+            <h5 class="text-danger font-weight-bold" id="summary-total-final">
+              Tổng thanh toán: 0₫
+            </h5>
+
+            <button
+              id="btn-review-order"
+              class="btn btn-primary btn-block mb-2"
+            >
+              Xem Tóm tắt Đơn đặt hàng
+            </button>
+
+            <div
+              id="order-final-summary"
+              class="mt-3"
+              style="display: none"
+            ></div>
+
+            <button
+              id="btn-place-order"
+              class="btn btn-secondary btn-block"
+              disabled
+            >
+              HOÀN TẤT ĐẶT HÀNG
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- JS: để đúng thứ tự này, và đặt TRƯỚC </body>          -->
+    <!-- ===================================================== -->
+
+    <!-- 0. jQuery (nếu trang khác của bạn cần) -->
+    <script src="./assets/js/jquery-3.6.0.min.js"></script>
+
+    <!-- 1. Auth core: đọc user từ localStorage -->
+    <script src="./assets/js/auth.js"></script>
+    <!-- 2. Cầu nối để auth.js lấy đúng dữ liệu lưu -->
+    <script src="./assets/js/auth.localstorage.bridge.js"></script>
+    <!-- 3. Guard nhẹ cho user (KHÔNG dùng auth.security.enforcer.js ở trang này) -->
+    <script src="./assets/js/auth.reactive.guard.v2.js"></script>
+
+    <!-- 4. Store / UI / Product seed (nếu bạn dùng ở trang khác) -->
+    <script src="./assets/js/store.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/products.seed.js"></script>
+    <script src="./assets/js/products.app.js"></script>
+
+    <!-- 5. Giỏ hàng (cần auth + store xong rồi) -->
+    <script src="./assets/js/cart.js"></script>
+
+    <!-- 6. Script riêng của trang thanh toán -->
+    <script>
+      (function () {
+        // ====== 0. Nếu chưa login thì chuyển sang login nhưng vẫn quay lại được ======
+        var user =
+          (window.AUTH && window.AUTH.getCurrentUser
+            ? window.AUTH.getCurrentUser()
+            : null) || null;
+        if (!user) {
+          var back = location.pathname + location.search + location.hash;
+          location.href =
+            "./account/login.html?redirect=" + encodeURIComponent(back);
+          return; // dừng ở đây
+        }
+
+        // ====== 1. Điền địa chỉ từ hồ sơ (nếu bạn có lưu) ======
+        var accountAddrEl = document.getElementById("account-address-text");
+        if (accountAddrEl && user.address) {
+          accountAddrEl.textContent = user.address;
+        }
+
+        // ====== 2. Toggle form địa chỉ mới ======
+        var radioExisting = document.getElementById("address-existing");
+        var radioNew = document.getElementById("address-new");
+        var newAddrBox = document.getElementById("new-address-form");
+
+        function updateAddressForm() {
+          if (radioNew.checked) {
+            newAddrBox.style.display = "block";
+          } else {
+            newAddrBox.style.display = "none";
+          }
+        }
+        radioExisting.addEventListener("change", updateAddressForm);
+        radioNew.addEventListener("change", updateAddressForm);
+        updateAddressForm();
+
+        // ====== 3. Render thông tin thanh toán theo phương thức ======
+        var payBlock = document.getElementById("payment-info-block");
+        function renderPayInfo(type) {
+          if (type === "transfer") {
+            payBlock.innerHTML =
+              '<div class="alert alert-info mb-0">' +
+              "<strong>Chuyển khoản ngân hàng:</strong><br>" +
+              "Ngân hàng: Vietcombank<br>" +
+              "Chủ TK: NGUYEN VAN A<br>" +
+              "STK: 0123456789<br>" +
+              "Nội dung: Thanh toan don hang #" +
+              "</div>";
+          } else if (type === "online") {
+            payBlock.innerHTML =
+              '<div class="alert alert-warning mb-0">Cổng thanh toán online đang được hoàn thiện.</div>';
+          } else {
+            payBlock.innerHTML = "";
+          }
+        }
+        document
+          .querySelectorAll('input[name="payment-method"]')
+          .forEach(function (r) {
+            r.addEventListener("change", function () {
+              renderPayInfo(this.value);
+            });
+          });
+        renderPayInfo("cash"); // mặc định
+
+        // ====== 4. Lấy tổng tiền từ giỏ hàng để hiển thị ======
+        function toVND(n) {
+          return (Number(n) || 0).toLocaleString("vi-VN") + "₫";
+        }
+        var total = 0;
+        try {
+          if (window.SVStore && window.SVStore.getCartTotal) {
+            total = window.SVStore.getCartTotal();
+          } else if (window.SVStore && window.SVStore.getCart) {
+            var cart = window.SVStore.getCart() || [];
+            total = cart.reduce(function (sum, item) {
+              return sum + (Number(item.price) || 0) * (Number(item.qty) || 0);
+            }, 0);
+          }
+        } catch (e) {
+          total = 0;
+        }
+        document.getElementById("summary-total-products").textContent =
+          "Tổng tiền hàng: " + toVND(total);
+        document.getElementById("summary-total-final").textContent =
+          "Tổng thanh toán: " + toVND(total);
+
+        // ====== 5. Xem tóm tắt đơn & bật nút đặt hàng ======
+        var btnReview = document.getElementById("btn-review-order");
+        var boxSummary = document.getElementById("order-final-summary");
+        var btnPlace = document.getElementById("btn-place-order");
+
+        btnReview.addEventListener("click", function () {
+          boxSummary.style.display = "block";
+          boxSummary.innerHTML =
+            "<p><strong>Người mua:</strong> " +
+            (user.fullName || user.email || user.username || "Bạn") +
+            "</p>" +
+            "<p><strong>Tổng tiền:</strong> " +
+            toVND(total) +
+            "</p>" +
+            "<p><em>Sau khi xác nhận, chúng tôi sẽ liên hệ để giao hàng.</em></p>";
+          btnPlace.disabled = false;
+        });
+
+        // ====== 6. Đặt hàng (demo) ======
+        btnPlace.addEventListener("click", function () {
+          alert(
+            "Đặt hàng thành công (demo). Bạn có thể chuyển sang order_success.html"
+          );
+          // location.href = "/order_success.html"
+        });
+      })();
+    </script>
+  </body>
+</html>

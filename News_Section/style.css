@@ -1,0 +1,82 @@
+/* ===== SIDEBAR: danh sách bài viết mới ===== */
+aside.left-content .aside-item { 
+  margin-bottom: 24px;
+}
+
+aside.left-content .aside-title { 
+  margin: 0 0 10px;
+}
+
+aside.left-content .aside-title .title-head {
+  display: inline-block;
+  margin: 0;
+  font-size: 18px;
+  padding: 6px 30px;
+  border: 2px solid #000;
+}
+
+aside.left-content .aside-title .title-head span a {
+  color: #111;
+  text-decoration: none;
+}
+
+aside.left-content .aside-title .title-head span a:hover {
+  color: #ff0000;
+}
+
+/* danh sách bài viết trong sidebar */
+aside.left-content .blog-aside .blog-list .loop-blog {
+  padding: 10px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+aside.left-content .blog-aside .blog-list .loop-blog:last-child {
+  border-bottom: none;
+}
+
+aside.left-content .blog-aside h3 {
+  font-size: 14px;
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+aside.left-content .blog-aside a {
+  color: #333;
+  text-decoration: none;
+  transition: color .15s ease;
+}
+
+aside.left-content .blog-aside a:hover {
+  color: #0d6efd;
+}
+
+aside.left-content .blog-aside .date {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ===== BANNERS trong sidebar ===== */
+.banner_blogs .widget {
+  margin-top: 30px;
+}
+
+.banner_blogs .widget img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* ===== Helpers giữ nguyên hành vi ẩn/hiện theo breakpoint ===== */
+.hidden-xs,
+.hidden-sm { display: block; }
+
+@media (max-width: 767.98px) {
+  .hidden-xs { display: none; }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .hidden-sm { display: none; }
+}

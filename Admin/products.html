@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css">
+    <!-- GUARD -->
+    <script>
+      (function () {
+        try {
+          const u = JSON.parse(
+            sessionStorage.getItem("session.user") || "null"
+          );
+          if (!u || u.role !== "admin") location.replace("./login.html");
+        } catch {
+          location.replace("./login.html");
+        }
+      })();
+    </script>
+
+    <title>Quản lý sản phẩm | Nobility 1800s Admin</title>
+
+    <!-- CSS admin chung -->
+    <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      .page {
+        padding: 14px 16px;
+      }
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 0 12px;
+      }
+      .page-header h1 {
+        font-size: 30px;
+        margin: 0;
+        color: #000;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: #fff;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .btn.primary {
+        background: #1f235a;
+        color: #fff;
+        border-color: #1f235a;
+      }
+      .input {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 10px 12px;
+        min-width: 220px;
+        background: #fff;
+        color: #111;
+        outline: none;
+      }
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin: 12px 0;
+        flex-wrap: wrap;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      thead td {
+        background: #f8fafc;
+        font-weight: 800;
+        color: #111;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #f0f2f5;
+        vertical-align: middle;
+      }
+      tr:hover {
+        background: #fafafa;
+      }
+      .status-chip {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        border: 1px solid #e5e7eb;
+      }
+      .status-chip.selling {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #065f46;
+      }
+      .status-chip.stopped {
+        background: #fff7ed;
+        border-color: #fed7aa;
+        color: #9a3412;
+      }
+      .status-chip.hidden {
+        background: #eef2ff;
+        border-color: #c7d2fe;
+        color: #3730a3;
+      }
+      .thumb {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        object-fit: cover;
+        border: 1px solid #e5e7eb;
+      }
+      .btn-action {
+        padding: 6px 8px;
+        border-radius: 8px;
+        font-weight: 700;
+      }
+
+      /* Drawer */
+      .drawer-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        display: none;
+        z-index: 998;
+      }
+      .drawer-backdrop.show {
+        display: block;
+      }
+      .drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100dvh;
+        width: min(440px, 92vw);
+        background: #fff;
+        border-left: 1px solid #e5e7eb;
+        z-index: 999;
+        transform: translateX(100%);
+        transition: transform 0.25s ease;
+        display: flex;
+        flex-direction: column;
+        box-shadow: -24px 0 60px rgba(0, 0, 0, 0.08);
+      }
+      .drawer.open {
+        transform: translateX(0);
+      }
+      .drawer .cardHeader {
+        padding: 14px 16px;
+        border-bottom: 1px solid #eef2f7;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .drawer .drawer-body {
+        padding: 12px 14px;
+        overflow: auto;
+      }
+      .close-x {
+        appearance: none;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        border-radius: 10px;
+        padding: 8px 10px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .form-col label.small {
+        font-size: 12px;
+        color: #6b7280;
+        margin: 10px 0 6px;
+        display: block;
+      }
+      .help {
+        color: #6b7280;
+        font-size: 12px;
+        margin: 4px 0 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="navagation">
+        <ul>
+          <li>
+            <a href="./index.html">
+              <span class="icon"><i class="fa-brands fa-apple"></i></span>
+              <span class="title">Nobility 1800s</span>
+            </a>
+          </li>
+
+          <li id="nav-dashboard">
+            <a href="./index.html">
+              <span class="icon"><i class="fa-solid fa-house"></i></span>
+              <span class="title">Bảng điều khiển</span>
+            </a>
+          </li>
+
+          <li id="nav-customers">
+            <a href="./users.html">
+              <span class="icon"><i class="fa-solid fa-user"></i></span>
+              <span class="title">Quản lý khách hàng</span>
+            </a>
+          </li>
+
+          <li id="nav-categories">
+            <a href="./categories.html">
+              <span class="icon"><i class="fa-solid fa-layer-group"></i></span>
+              <span class="title">Quản lý danh mục</span>
+            </a>
+          </li>
+
+          <li class="hovered" id="nav-products">
+            <a href="./products.html">
+              <span class="icon"><i class="fa-solid fa-tags"></i></span>
+              <span class="title">Quản lý sản phẩm</span>
+            </a>
+          </li>
+
+          <li id="nav-imports">
+            <a href="./imports.html">
+              <span class="icon"><i class="fa-solid fa-box-open"></i></span>
+              <span class="title">Phiếu nhập hàng</span>
+            </a>
+          </li>
+
+          <li id="nav-inventory">
+            <a href="./inventory.html">
+              <span class="icon"><i class="fa-solid fa-warehouse"></i></span>
+              <span class="title">Quản lý hàng tồn kho</span>
+            </a>
+          </li>
+
+          <li id="nav-orders">
+            <a href="./orders.html">
+              <span class="icon"><i class="fa-solid fa-receipt"></i></span>
+              <span class="title">Quản lý đơn hàng</span>
+            </a>
+          </li>
+
+          <hr />
+
+          <li class="welcome-admin-tile" style="margin: 8px 10px 6px">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                border: 1px solid #2a2f8a;
+                border-radius: 12px;
+                background: #fff;
+                color: #1f235a;
+                font-weight: 700;
+              "
+            >
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Chào mừng, Admin</span>
+            </div>
+          </li>
+
+          <li>
+            <a href="#" id="btn-logout-side">
+              <span class="icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
+              </span>
+              <span class="title">Đăng xuất</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="page">
+        <div class="page-header">
+          <h1>Quản lý sản phẩm</h1>
+          <div class="actions">
+            <button class="btn primary" id="btn-new">
+              <i class="fa-solid fa-plus"></i>
+              <span>Thêm sản phẩm</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <input
+            id="q"
+            class="input"
+            type="text"
+            placeholder="Tìm theo mã / tên sản phẩm..."
+          />
+          <select id="filter-cat" class="input" style="min-width: 200px">
+            <option value="">— Tất cả loại —</option>
+          </select>
+          <select id="filter-status" class="input" style="min-width: 180px">
+            <option value="">— Tất cả trạng thái —</option>
+            <option value="selling">Đang bán</option>
+            <option value="stopped">Hết bán</option>
+            <option value="hidden">Ẩn</option>
+          </select>
+        </div>
+
+        <div class="details">
+          <div class="recentOrders" style="flex: 2">
+            <div class="cardHeader"><h2>Danh sách sản phẩm</h2></div>
+            <table>
+              <thead>
+                <tr>
+                  <td>#</td>
+                  <td>Hình</td>
+                  <td>Mã</td>
+                  <td>Tên</td>
+                  <td>Loại</td>
+                  <td>ĐVT</td>
+                  <td>SL</td>
+                  <td>Giá vốn</td>
+                  <td>%LN</td>
+                  <td>Giá đề xuất</td>
+                  <td>Nhà cung cấp</td>
+                  <td>Hiện trạng</td>
+                  <td>Hành động</td>
+                </tr>
+              </thead>
+              <tbody id="prod-body">
+                <tr>
+                  <td
+                    colspan="13"
+                    style="text-align: center; color: #9aa3ad; padding: 20px"
+                  >
+                    Đang tải…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer -->
+      <div id="drawer-backdrop" class="drawer-backdrop"></div>
+      <aside id="prod-drawer" class="drawer" aria-hidden="true">
+        <div class="cardHeader">
+          <h2 id="form-title" style="margin: 0">Thêm sản phẩm</h2>
+          <button type="button" class="close-x" id="btn-close-drawer">✕</button>
+        </div>
+        <div class="drawer-body form-col">
+          <form id="prod-form">
+            <input type="hidden" id="id" />
+
+            <label class="small">Mã sản phẩm</label>
+            <input
+              id="code"
+              class="input"
+              type="text"
+              required
+              placeholder="SP001"
+            />
+
+            <label class="small">Tên sản phẩm</label>
+            <input
+              id="name"
+              class="input"
+              type="text"
+              required
+              placeholder="Apestomen Nitro"
+            />
+
+            <label class="small">Loại</label>
+            <select id="categoryId" class="input" required></select>
+
+            <label class="small">Mô tả</label>
+            <input id="desc" class="input" type="text" placeholder="Mô tả..." />
+
+            <label class="small">Đơn vị tính</label>
+            <input
+              id="uom"
+              class="input"
+              type="text"
+              placeholder="hộp, chai..."
+            />
+
+            <label class="small">Số lượng</label>
+            <input id="qty" class="input" type="number" min="0" value="0" />
+
+            <label class="small">Giá vốn (1 đơn vị)</label>
+            <input id="cost" class="input" type="number" min="0" value="0" />
+
+            <label class="small">Tỉ lệ lợi nhuận mong muốn (%)</label>
+            <input id="margin" class="input" type="number" min="0" value="0" />
+
+            <label class="small">Giá bán đề xuất</label>
+            <input id="price" class="input" type="number" min="0" value="0" />
+            <div id="auto-price" class="help">
+              (Tự tính: giá vốn × (1 + %/100))
+            </div>
+
+            <label class="small">Nhà cung cấp</label>
+            <input
+              id="supplier"
+              class="input"
+              type="text"
+              placeholder="Tên NCC…"
+            />
+
+            <label class="small">Hiện trạng</label>
+            <select id="status" class="input">
+              <option value="selling">Đang bán</option>
+              <option value="stopped">Hết bán</option>
+              <option value="hidden">Ẩn</option>
+            </select>
+
+            <label class="small">Hình ảnh</label>
+            <input id="image" class="input" type="file" accept="image/*" />
+            <div id="img-preview" style="margin: 8px 0"></div>
+
+            <div
+              style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap"
+            >
+              <button class="btn primary" type="submit">Lưu</button>
+              <button class="btn" id="btn-cancel" type="button">Hủy</button>
+              <button class="btn" id="btn-remove-img" type="button">
+                Bỏ hình
+              </button>
+            </div>
+          </form>
+        </div>
+      </aside>
+    </div>
+
+    <!-- JS chung -->
+    <script src="./assets/js/main.js"></script>
+
+    <!-- Seed sản phẩm của User (phải load TRƯỚC products.js) -->
+    <script src="../assets/js/products.seed.js"></script>
+
+    <!-- Logic quản lý Admin -->
+    <script src="./assets/js/products.js"></script>
+
+    <script>
+      // Logout
+      document
+        .getElementById("btn-logout-side")
+        ?.addEventListener("click", (e) => {
+          e.preventDefault();
+          sessionStorage.removeItem("session.user");
+          location.href = "./login.html";
+        });
+
+      // Drawer show/hide
+      const drawer = document.getElementById("prod-drawer");
+      const backdrop = document.getElementById("drawer-backdrop");
+      const openBtn = document.getElementById("btn-new");
+      const closeBtn = document.getElementById("btn-close-drawer");
+      const cancelBtn = document.getElementById("btn-cancel");
+
+      function openDrawer() {
+        drawer.classList.add("open");
+        backdrop.classList.add("show");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+      function closeDrawer() {
+        drawer.classList.remove("open");
+        backdrop.classList.remove("show");
+        drawer.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn?.addEventListener("click", openDrawer);
+      closeBtn?.addEventListener("click", closeDrawer);
+      cancelBtn?.addEventListener("click", closeDrawer);
+      backdrop?.addEventListener("click", closeDrawer);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeDrawer();
+      });
+
+      // Cho products.js mở form khi click "Sửa"
+      window.AdminProductDrawer = { open: openDrawer, close: closeDrawer };
+    </script>
+  </body>
+</html>

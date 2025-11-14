@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý tồn kho & Báo cáo | Nobility 1800s Admin</title>
+
+    <!-- GUARD -->
+    <script>
+      (function () {
+        try {
+          const u = JSON.parse(
+            sessionStorage.getItem("session.user") || "null"
+          );
+          if (!u || u.role !== "admin") location.replace("./login.html");
+        } catch {
+          location.replace("./login.html");
+        }
+      })();
+    </script>
+
+    <!-- CSS admin chung -->
+    <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="../fontawesome-free-6.7.2-web/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      .page {
+        padding: 14px 16px;
+      }
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 8px 0 16px;
+      }
+      .page-header h1 {
+        font-size: 30px;
+        margin: 0;
+        color: #000;
+      }
+      .toolbar {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 10px;
+        align-items: end;
+        margin: 12px 0;
+      }
+      .box {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 12px;
+      }
+      .box h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+      .input,
+      select,
+      input[type="date"],
+      input[type="number"],
+      input[type="datetime-local"] {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: #fff;
+        width: 100%;
+        outline: none;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: #fff;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .btn.primary {
+        background: #111827;
+        color: #fff;
+        border-color: #111827;
+      }
+      .btn.ghost {
+        background: #fff;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      thead td {
+        background: #f8fafc;
+        font-weight: 800;
+        color: #111;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #f0f2f5;
+        vertical-align: middle;
+      }
+      tr:hover {
+        background: #fafafa;
+      }
+      .num {
+        text-align: right;
+        white-space: nowrap;
+      }
+      .status {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        font-size: 12px;
+      }
+      .status.low {
+        background: #fff7ed;
+        border-color: #fed7aa;
+        color: #9a3412;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+      }
+      .label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 6px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .muted {
+        color: #6b7280;
+        font-size: 12px;
+      }
+      .right {
+        margin-left: auto;
+        text-align: right;
+      }
+      .nowrap {
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="navagation">
+        <ul>
+          <li>
+            <a href="./index.html">
+              <span class="icon"><i class="fa-brands fa-apple"></i></span>
+              <span class="title">Nobility 1800s</span>
+            </a>
+          </li>
+
+          <li id="nav-dashboard">
+            <a href="./index.html">
+              <span class="icon"><i class="fa-solid fa-house"></i></span>
+              <span class="title">Bảng điều khiển</span>
+            </a>
+          </li>
+
+          <li id="nav-customers">
+            <a href="./users.html">
+              <span class="icon"><i class="fa-solid fa-user"></i></span>
+              <span class="title">Quản lý khách hàng</span>
+            </a>
+          </li>
+
+          <li id="nav-categories">
+            <a href="./categories.html">
+              <span class="icon"><i class="fa-solid fa-layer-group"></i></span>
+              <span class="title">Quản lý danh mục</span>
+            </a>
+          </li>
+
+          <li id="nav-products">
+            <a href="./products.html">
+              <span class="icon"><i class="fa-solid fa-tags"></i></span>
+              <span class="title">Quản lý sản phẩm</span>
+            </a>
+          </li>
+
+          <li id="nav-imports">
+            <a href="./imports.html">
+              <span class="icon"><i class="fa-solid fa-box-open"></i></span>
+              <span class="title">Phiếu nhập hàng</span>
+            </a>
+          </li>
+
+          <li id="nav-inventory" class="hovered">
+            <a href="./inventory.html">
+              <span class="icon"><i class="fa-solid fa-boxes-stacked"></i></span>
+              <span class="title">Quản lý hàng tồn kho</span>
+            </a>
+          </li>
+
+          <li id="nav-orders">
+            <a href="./orders.html">
+              <span class="icon"><i class="fa-solid fa-receipt"></i></span>
+              <span class="title">Quản lý đơn hàng</span>
+            </a>
+          </li>
+
+          <hr />
+
+          <li class="welcome-admin-tile" style="margin: 8px 10px 6px">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                border: 1px solid #2a2f8a;
+                border-radius: 12px;
+                background: #fff;
+                color: #1f235a;
+                font-weight: 700;
+              "
+            >
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Chào mừng, Admin</span>
+            </div>
+          </li>
+
+          <li>
+            <a href="#" id="btn-logout-side">
+              <span class="icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
+              </span>
+              <span class="title">Đăng xuất</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="page">
+        <div class="page-header">
+          <h1>Quản lý tồn kho &amp; Báo cáo</h1>
+          <div id="summary" class="muted right"></div>
+        </div>
+
+        <!-- Khối 1: Tra cứu tồn tại thời điểm -->
+        <div class="box" style="margin-bottom: 12px">
+          <h3>Tra cứu số lượng tồn tại một thời điểm</h3>
+          <div class="toolbar">
+            <div style="grid-column: span 4">
+              <div class="label">Sản phẩm</div>
+              <select id="f-product" class="input"></select>
+            </div>
+            <div style="grid-column: span 3">
+              <div class="label">Loại</div>
+              <select id="f-category" class="input"></select>
+            </div>
+            <div style="grid-column: span 3">
+              <div class="label">Thời điểm</div>
+              <input id="f-at" type="datetime-local" class="input" />
+            </div>
+            <div
+              style="
+                grid-column: span 2;
+                display: flex;
+                gap: 8px;
+                align-items: center;
+              "
+            >
+              <button id="btn-check" class="btn primary">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                <span>Xem tồn</span>
+              </button>
+              <button id="btn-reset-check" class="btn ghost">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Xoá lọc</span>
+              </button>
+            </div>
+          </div>
+          <div id="at-result" class="muted"></div>
+        </div>
+
+        <!-- Khối 2: Báo cáo nhập – xuất – tồn -->
+        <div class="box" style="margin-bottom: 12px">
+          <h3>Báo cáo nhập – xuất – tồn theo khoảng thời gian</h3>
+          <div class="toolbar">
+            <div style="grid-column: span 3">
+              <div class="label">Từ ngày</div>
+              <input id="r-from" type="date" class="input" />
+            </div>
+            <div style="grid-column: span 3">
+              <div class="label">Đến ngày</div>
+              <input id="r-to" type="date" class="input" />
+            </div>
+            <div style="grid-column: span 3">
+              <div class="label">Loại</div>
+              <select id="r-category" class="input"></select>
+            </div>
+            <div
+              style="
+                grid-column: span 3;
+                display: flex;
+                gap: 8px;
+                align-items: center;
+              "
+            >
+              <button id="btn-run-report" class="btn primary">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Chạy báo cáo</span>
+              </button>
+              <button id="btn-export-csv" class="btn ghost">
+                <i class="fa-solid fa-file-export"></i>
+                <span>Xuất CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="muted">
+              * Tồn đầu = tổng (nhập - xuất) trước ngày bắt đầu.
+            </div>
+            <div class="muted right">
+              * Tồn cuối = tồn đầu + nhập trong kỳ - xuất trong kỳ.
+            </div>
+          </div>
+
+          <div class="recentOrders" style="margin-top: 10px">
+            <table>
+              <thead>
+                <tr>
+                  <td>#</td>
+                  <td>Mã</td>
+                  <td>Tên sản phẩm</td>
+                  <td>Loại</td>
+                  <td class="num">Tồn đầu</td>
+                  <td class="num">Nhập</td>
+                  <td class="num">Xuất</td>
+                  <td class="num">Tồn cuối</td>
+                </tr>
+              </thead>
+              <tbody id="report-body">
+                <tr>
+                  <td
+                    colspan="8"
+                    style="text-align: center; color: #9aa3ad; padding: 14px"
+                  >
+                    Chưa có dữ liệu
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Khối 3: Cảnh báo sắp hết -->
+        <div class="box">
+          <h3>Cảnh báo sắp hết hàng</h3>
+          <div class="grid-3" style="margin-bottom: 10px">
+            <div>
+              <div class="label">Ngưỡng cảnh báo (≤)</div>
+              <input
+                id="low-threshold"
+                type="number"
+                class="input"
+                min="0"
+                step="1"
+                placeholder="VD: 5"
+              />
+            </div>
+            <div>
+              <div class="label">Loại</div>
+              <select id="low-category" class="input"></select>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: flex-end">
+              <button id="btn-check-low" class="btn primary">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Quét tồn hiện tại</span>
+              </button>
+              <span class="muted">
+                Kiểm tra theo số tồn <strong>hiện tại</strong>.
+              </span>
+            </div>
+          </div>
+
+          <div class="recentOrders">
+            <table>
+              <thead>
+                <tr>
+                  <td>#</td>
+                  <td>Mã</td>
+                  <td>Tên sản phẩm</td>
+                  <td>Loại</td>
+                  <td class="num">Tồn hiện tại</td>
+                  <td>Trạng thái</td>
+                </tr>
+              </thead>
+              <tbody id="low-body">
+                <tr>
+                  <td
+                    colspan="6"
+                    style="text-align: center; color: #9aa3ad; padding: 14px"
+                  >
+                    Chưa quét
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS chung -->
+    <script src="./assets/js/main.js"></script>
+
+    <!-- Seed sản phẩm (dùng chung cho tồn kho / báo cáo) -->
+    <script src="./assets/js/products.seed.js"></script>
+
+    <!-- Logic tồn kho & báo cáo -->
+    <script src="./assets/js/inventory.js"></script>
+
+    <script>
+      // Logout
+      document
+        .getElementById("btn-logout-side")
+        ?.addEventListener("click", (e) => {
+          e.preventDefault();
+          sessionStorage.removeItem("session.user");
+          location.href = "./login.html";
+        });
+    </script>
+  </body>
+</html>

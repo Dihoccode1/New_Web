@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Sản phẩm – Nobility 1800s</title>
+    <meta
+      name="description"
+      content="Danh mục sản phẩm – tìm kiếm, lọc theo phân loại/giá, sắp xếp và phân trang. Hỗ trợ cập nhật trực tiếp khi Admin thay đổi."
+    />
+
+    <!-- CSS chung -->
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/base.css" />
+
+    <!-- Vendor CSS -->
+    <link
+      rel="stylesheet"
+      href="../bootstrap-4.6.2-dist/css/bootstrap.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="../fontawesome-free-6.7.2-web/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="../assets/css/normalize.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      :root {
+        --bg: #fff;
+        --text: #111;
+        --muted: #6b7280;
+        --line: #eceff3;
+        --radius: 14px;
+        --shadow-sm: 0 6px 16px rgba(17, 24, 39, 0.08);
+        --shadow-md: 0 12px 28px rgba(17, 24, 39, 0.12);
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      body {
+        font-family: Roboto, system-ui, -apple-system, Segoe UI, Arial,
+          sans-serif;
+        color: var(--text);
+      }
+      .page-main .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+
+      /* Breadcrumb */
+      .bread-crumb {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+      .breadcrumb {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 8px;
+        font-size: 14px;
+        background: transparent !important;
+      }
+      .breadcrumb li {
+        color: #666;
+        display: flex;
+        align-items: center;
+      }
+      .breadcrumb li.home a {
+        font-weight: 600;
+        color: #333;
+      }
+      .breadcrumb .sep {
+        color: #999;
+      }
+      .breadcrumb li strong span {
+        color: #000;
+      }
+      .txt_content_child,
+      .sdt {
+        font-size: 10px;
+      }
+
+      /* Search form */
+      .sv-search {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 0.9fr 0.9fr 1fr auto;
+        gap: 12px;
+        padding: 14px;
+        background: #f8fafc;
+        border: 1px solid #e9eef5;
+        border-radius: 12px;
+        align-items: end;
+      }
+      .sv-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .sv-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        min-height: 16px;
+        line-height: 16px;
+      }
+      .sv-field input,
+      .sv-field select {
+        height: 44px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 0 12px;
+        font-size: 14px;
+        background: #fff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .sv-field input:focus,
+      .sv-field select:focus {
+        outline: none;
+        border-color: #cbd5e1;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.08);
+      }
+      .sv-icon {
+        position: relative;
+      }
+      .sv-icon i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 14px;
+      }
+      .sv-icon input {
+        padding-left: 34px;
+      }
+      .sv-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .sv-btn {
+        height: 44px;
+        padding: 0 16px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        transition: transform 0.08s, box-shadow 0.2s, background 0.2s,
+          color 0.2s, border-color 0.2s;
+      }
+      .sv-btn:active {
+        transform: translateY(1px);
+      }
+      .sv-btn-primary {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+      }
+      .sv-btn-primary:hover {
+        box-shadow: var(--shadow-sm);
+      }
+      .sv-btn-ghost {
+        background: #fff;
+        color: #111;
+        border-color: #e5e7eb;
+      }
+      .sv-btn-ghost:hover {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+      }
+      @media (max-width: 992px) {
+        .sv-search {
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .sv-search #q {
+          grid-column: 1 / -1;
+        }
+        .sv-actions {
+          grid-column: 1 / -1;
+          justify-content: stretch;
+        }
+      }
+      @media (max-width: 576px) {
+        .sv-search {
+          grid-template-columns: 1fr;
+        }
+      }
+      .sv-divider {
+        border: 0;
+        border-top: 1px solid #e9eef5;
+        margin: 8px 0 16px;
+      }
+
+      /* Grid */
+      .row.equalize-cards {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -20px;
+      }
+      .col {
+        padding: 20px;
+      }
+      .col-3 {
+        width: 25%;
+      }
+      @media (max-width: 991.98px) {
+        .col-3 {
+          width: 50%;
+        }
+      }
+      @media (max-width: 575.98px) {
+        .col-3 {
+          width: 100%;
+        }
+      }
+
+      /* Card */
+      .product-box {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: 0.35s var(--ease);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      .product-box:hover {
+        box-shadow: var(--shadow-md);
+        border-color: #e6ebf0;
+      }
+      .product-box.is-out {
+        opacity: 0.9;
+      }
+      .product-thumbnail {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, #fafbfc 0%, #f7fafc 100%);
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .image_link {
+        position: absolute;
+        inset: 0;
+        display: flex;
+      }
+      .image_link img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s var(--ease);
+      }
+      .product-box:hover .image_link img {
+        transform: scale(1.03);
+      }
+
+      /* CTA overlay */
+      .product-action-grid {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 5;
+        opacity: 0;
+        transform: translateY(100%);
+        pointer-events: none;
+        transition: 0.25s var(--ease);
+      }
+      .product-thumbnail > .product-action-grid .btn-cart {
+        display: block;
+        width: 100%;
+        padding: 12px 16px;
+        border: 0;
+        border-radius: 0;
+        background: #111;
+        color: #fff;
+        font-weight: 800;
+      }
+      .product-box:hover .product-thumbnail > .product-action-grid {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      @media (hover: none) and (pointer: coarse) {
+        .product-thumbnail > .product-action-grid {
+          opacity: 1;
+          transform: none;
+          pointer-events: auto;
+        }
+      }
+
+      /* Badge */
+      .product-label {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .product-label .label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 5px 9px;
+        background: #fff;
+        color: #f00;
+        border: 1px #f00 solid;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        text-transform: uppercase;
+      }
+      .product-label .label-oos {
+        color: #6b7280;
+        border-color: #9ca3af;
+      }
+
+      /* Info */
+      .product-info {
+        padding: 12px 14px 14px;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+      }
+      .product-name {
+        margin: 2px 0 8px;
+        font-size: 16px;
+        line-height: 1.35;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .product-name a {
+        color: var(--text);
+        background: linear-gradient(currentColor, currentColor) 0 100%/0 2px
+          no-repeat;
+        transition: background-size 0.35s var(--ease), color 0.35s var(--ease);
+      }
+      .product-name a:hover {
+        color: #000;
+        background-size: 100% 2px;
+      }
+      .price-box {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+      }
+      .product-price {
+        color: #ff0000;
+        font-weight: 800;
+        font-size: 17px;
+      }
+      .product-price-old {
+        color: var(--muted);
+        font-size: 14px;
+        text-decoration: line-through;
+      }
+
+      /* Stock text */
+      .product-stock {
+        margin-top: 4px;
+        font-size: 12px;
+        text-align: center;
+      }
+      .product-stock span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .stock-in {
+        color: #16a34a;
+        font-weight: 500;
+      }
+      .stock-low {
+        color: #ea580c;
+        font-weight: 600;
+      }
+      .stock-out {
+        color: #6b7280;
+        font-weight: 500;
+      }
+      .stock-in i,
+      .stock-low i,
+      .stock-out i {
+        font-size: 11px;
+      }
+
+      /* Pagination */
+      .pagination-nav {
+        display: flex;
+        justify-content: center;
+        padding: 24px 0 16px;
+        margin-top: 8px;
+      }
+      .pagination-list {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 12px;
+      }
+      .page-item .page-link {
+        display: block;
+        padding: 8px 12px;
+        color: #333;
+        font-size: 15px;
+        border: 1px solid transparent;
+      }
+      .page-item.active .page-link {
+        color: #000;
+        font-weight: 700;
+        border-bottom: 2px solid #000;
+      }
+      .page-item:not(.active) .page-link:hover {
+        text-decoration: underline;
+      }
+
+      /* mobile header fix */
+      @media (max-width: 767.98px) {
+        .header-left,
+        .search-bar {
+          display: none !important;
+        }
+        .header-main {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          padding: 8px 10px !important;
+          gap: 8px !important;
+        }
+        .header-center {
+          flex: 0 0 auto;
+          max-width: 40% !important;
+          overflow: hidden;
+        }
+        .header-center .logo img {
+          max-width: 120px !important;
+          height: auto !important;
+          display: block;
+        }
+        .header-right {
+          flex: 0 0 auto;
+        }
+        .header-right .cart-link {
+          display: inline-flex !important;
+          align-items: center;
+          gap: 4px;
+          padding: 4px 6px !important;
+          margin: 0 !important;
+          font-size: 12px !important;
+          white-space: nowrap !important;
+        }
+        .header-right .cart-link i {
+          font-size: 15px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top header -->
+    <header class="header">
+      <div class="topbar">
+        <div class="container"><div class="topbar-right"></div></div>
+      </div>
+    </header>
+
+    <!-- Mid header -->
+    <header class="mid-header">
+      <div class="container">
+        <div class="header-main">
+          <div class="header-left">
+            <form
+              action="/search"
+              method="get"
+              class="search-bar"
+              autocomplete="off"
+            >
+              <input
+                type="text"
+                name="query"
+                placeholder="Tìm kiếm"
+                autocomplete="off"
+                autocapitalize="off"
+                autocorrect="off"
+                spellcheck="false"
+                inputmode="search"
+              />
+              <button type="submit" aria-label="Tìm kiếm">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </form>
+          </div>
+          <div class="header-center">
+            <a href="../index.html" class="logo"
+              ><img src="../assets/images/logo.jpg" alt="GENTLEMAN"
+            /></a>
+          </div>
+          <div class="header-right">
+            <a href="../giohang.html" class="cart-link">
+              <i class="fa-solid fa-cart-shopping"></i>
+              GIỎ HÀNG (<span class="cart-count">0</span>)
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main nav -->
+    <nav class="main-nav">
+      <ul>
+        <li><a href="../index.html">TRANG CHỦ</a></li>
+        <li><a href="../gioithieu.html">GIỚI THIỆU</a></li>
+        <li>
+          <a href="./sanpham.html" class="js-products-url">SẢN PHẨM</a>
+        </li>
+        <li><a href="../tintuc.html">TIN TỨC</a></li>
+        <li><a href="../lienhe.html">LIÊN HỆ</a></li>
+      </ul>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <section class="bread-crumb">
+      <div class="container">
+        <ul class="breadcrumb">
+          <li class="home">
+            <a href="../index.html"><span>Trang chủ</span></a>
+          </li>
+          <li class="sep"><i class="fa-solid fa-angle-right"></i></li>
+          <li>
+            <strong><span>Sản phẩm</span></strong>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Page content -->
+    <div class="page-main">
+      <div class="container">
+        <!-- Filters -->
+        <form id="searchForm" class="sv-search" autocomplete="off">
+          <div class="sv-field sv-icon">
+            <label class="sv-label">Tìm kiếm</label>
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input
+              id="q"
+              type="text"
+              placeholder="Gõ từ khoá (vd: gold, gôm, wax)"
+              aria-label="Từ khoá tìm kiếm"
+            />
+          </div>
+          <div class="sv-field">
+            <label class="sv-label">Phân loại</label>
+            <select id="category" aria-label="Phân loại">
+              <option value="all">Tất cả</option>
+            </select>
+          </div>
+          <div class="sv-field">
+            <label class="sv-label">Giá từ</label>
+            <input
+              id="priceMin"
+              type="number"
+              min="0"
+              step="1000"
+              placeholder="0"
+              aria-label="Giá tối thiểu"
+            />
+          </div>
+          <div class="sv-field">
+            <label class="sv-label">Đến</label>
+            <input
+              id="priceMax"
+              type="number"
+              min="0"
+              step="1000"
+              placeholder="2.000.000"
+              aria-label="Giá tối đa"
+            />
+          </div>
+          <div class="sv-field">
+            <label class="sv-label">Sắp xếp</label>
+            <select id="sort" aria-label="Sắp xếp">
+              <option value="">Mặc định</option>
+              <option value="price-asc">Giá ↑</option>
+              <option value="price-desc">Giá ↓</option>
+              <option value="name-asc">Tên A→Z</option>
+              <option value="name-desc">Tên Z→A</option>
+            </select>
+          </div>
+          <div class="sv-actions">
+            <button type="submit" class="sv-btn sv-btn-primary">
+              <i class="fa-solid fa-sliders"></i> Lọc
+            </button>
+            <button type="button" id="svReset" class="sv-btn sv-btn-ghost">
+              Xoá lọc
+            </button>
+          </div>
+        </form>
+
+        <hr class="sv-divider" />
+
+        <!-- Grid -->
+        <div class="row equalize-cards" id="product-grid"></div>
+
+        <!-- Pagination -->
+        <nav class="pagination-nav" aria-label="Page navigation">
+          <ul id="pagination" class="pagination-list"></ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="site-footer">
+        <div class="top-footer">
+          <div class="container">
+            <div class="row">
+              <section class="widget-ft">
+                <h4 class="title-menu">Thông tin</h4>
+                <ul class="list-menu">
+                  <li class="li_menu">
+                    <a href="../index.html">Trang chủ</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="../gioithieu.html">Giới thiệu</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="./sanpham.html">Sản phẩm</a>
+                  </li>
+                  <li class="li_menu"><a href="../tintuc.html">Tin tức</a></li>
+                  <li class="li_menu"><a href="../lienhe.html">Liên hệ</a></li>
+                </ul>
+              </section>
+
+              <section class="widget-ft">
+                <h4 class="title-menu">Hỗ trợ</h4>
+                <ul class="list-menu">
+                  <li class="li_menu">
+                    <a href="../index.html">Trang chủ</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="../gioithieu.html">Giới thiệu</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="./sanpham.html">Sản phẩm</a>
+                  </li>
+                  <li class="li_menu"><a href="../tintuc.html">Tin tức</a></li>
+                  <li class="li_menu"><a href="../lienhe.html">Liên hệ</a></li>
+                </ul>
+              </section>
+
+              <section class="widget-ft">
+                <h4 class="title-menu">Hướng dẫn</h4>
+                <ul class="list-menu">
+                  <li class="li_menu">
+                    <a href="../index.html">Trang chủ</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="../gioithieu.html">Giới thiệu</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="./sanpham.html">Sản phẩm</a>
+                  </li>
+                  <li class="li_menu"><a href="../tintuc.html">Tin tức</a></li>
+                  <li class="li_menu"><a href="../lienhe.html">Liên hệ</a></li>
+                </ul>
+              </section>
+
+              <section class="widget-ft">
+                <h4 class="title-menu">Chính sách</h4>
+                <ul class="list-menu">
+                  <li class="li_menu">
+                    <a href="../index.html">Trang chủ</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="../gioithieu.html">Giới thiệu</a>
+                  </li>
+                  <li class="li_menu">
+                    <a href="./sanpham.html">Sản phẩm</a>
+                  </li>
+                  <li class="li_menu"><a href="../tintuc.html">Tin tức</a></li>
+                  <li class="li_menu"><a href="../lienhe.html">Liên hệ</a></li>
+                </ul>
+              </section>
+
+              <section class="wg-logo">
+                <h4 class="title-menu">Liên hệ</h4>
+                <ul class="contact">
+                  <li>
+                    <span class="txt_content_child">
+                      <span
+                        ><i
+                          class="fa-solid fa-location-dot"
+                          aria-hidden="true"
+                        ></i
+                      ></span>
+                      140B-Tổ 3, Ấp Xóm Chùa, Tỉnh Tây Ninh
+                    </span>
+                  </li>
+                  <li class="sdt">
+                    <span
+                      ><i class="fa-solid fa-phone" aria-hidden="true"></i
+                    ></span>
+                    <a href="tel:0338286525">0338286525</a>
+                  </li>
+                  <li class="sdt">
+                    <span><i class="fa-solid fa-envelope"></i></span>
+                    <a href="mailto:thanhloc29052006@gmail.com"
+                      >thanhloc29052006@gmail.com</a
+                    >
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="mid-footer">
+          <div class="container">
+            <div class="row">
+              <div class="fot_copyright">
+                <span class="wsp">
+                  <span>Cung cấp bởi <a href="javascript:;">Nhóm 7</a></span>
+                </span>
+              </div>
+              <nav class="fot_menu_copyright">
+                <ul class="ul_menu_fot">
+                  <li>
+                    <a href="../index.html" title="Trang chủ">Trang chủ</a>
+                  </li>
+                  <li>
+                    <a href="../gioithieu.html" title="Giới thiệu">Giới thiệu</a>
+                  </li>
+                  <li>
+                    <a href="./sanpham.html" title="Sản phẩm"
+                      >Sản phẩm</a
+                    >
+                  </li>
+                  <li><a href="../tintuc.html" title="Tin tức">Tin tức</a></li>
+                  <li><a href="../lienhe.html" title="Liên hệ">Liên hệ</a></li>
+                </ul>
+              </nav>
+              <div class="pay_footer">
+                <ul class="follow_option">
+                  <li>
+                    <a href="#"
+                      ><img src="../assets/images/pay_1.webp" alt="Payment"
+                    /></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><img src="../assets/images/pay_2.webp" alt="Payment"
+                    /></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><img src="../assets/images/pay_3.webp" alt="Payment"
+                    /></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><img src="../assets/images/pay_4.webp" alt="Payment"
+                    /></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><img src="../assets/images/pay_5.webp" alt="Payment"
+                    /></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><img src="../assets/images/pay_6.webp" alt="Payment"
+                    /></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><img src="../assets/images/pay_7.webp" alt="Payment"
+                    /></a>
+                  </li>
+                </ul>
+              </div>
+              <a
+                href="#"
+                id="back-to-top"
+                class="backtop"
+                title="Lên đầu trang"
+              >
+                <i class="fa-solid fa-angle-up" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Các file JS nền của m -->
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/auth.security.enforcer.js"></script>
+    <script src="../assets/js/auth.modal.bridge.js"></script>
+    <script src="../assets/js/products.seed.js"></script>
+
+    <!-- Ưu tiên catalog do admin đẩy -->
+    <script>
+      (function () {
+        try {
+          const fromAdmin = JSON.parse(
+            localStorage.getItem("sv_products_v1") || "[]"
+          );
+          if (Array.isArray(fromAdmin) && fromAdmin.length) {
+            window.SV_PRODUCT_SEED = fromAdmin;
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <script src="../assets/js/store.js"></script>
+    <script src="../assets/js/ui.js"></script>
+    <script src="../assets/js/auth.frontend.js"></script>
+
+    <!-- Vendor JS -->
+    <script
+      src="../assets/js/jquery-3.6.0.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="../assets/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../assets/js/auth.kick.guard.js"></script>
+
+    <!-- TOÀN BỘ JS TRANG SẢN PHẨM -->
+    <script>
+      (function (w, d) {
+        /* 1. search ở header -> chuyển sang đúng trang sản phẩm */
+        (function initHeaderSearch() {
+          const form = d.querySelector(".search-bar");
+          if (!form) return;
+          function getProductsURL() {
+            const a =
+              d.querySelector("nav.main-nav a.js-products-url") ||
+              d.querySelector('nav.main-nav a[href*="/sanpham"]');
+            return a && a.getAttribute("href")
+              ? a.getAttribute("href")
+              : "./sanpham.html";
+          }
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const input = form.querySelector(
+              'input[name="query"], input[name="q"]'
+            );
+            const q = ((input && input.value) || "")
+              .trim()
+              .replace(/\s+/g, " ");
+            const raw = getProductsURL();
+            const url = new URL(raw, w.location.origin);
+            if (q) url.searchParams.set("q", q);
+            else url.searchParams.delete("q");
+            w.location.href = url.pathname + (url.search ? url.search : "");
+          });
+        })();
+
+        /* 2. cho chỗ chào mừng click được */
+        (function () {
+          const el =
+            d.querySelector(".welcome-user") ||
+            d.querySelector(
+              "#welcomeName, [data-welcome-name], .js-welcome-name"
+            );
+          if (!el) return;
+          if (el.tagName === "A") {
+            el.setAttribute("href", "../account/profile.html");
+          } else {
+            const a = d.createElement("a");
+            a.href = "../account/profile.html";
+            a.className = "welcome-link";
+            while (el.firstChild) a.appendChild(el.firstChild);
+            el.appendChild(a);
+          }
+        })();
+
+        /* 3. refs */
+        const ROOT = d.getElementById("product-grid");
+        const PAGING = d.getElementById("pagination");
+        const FORM = d.getElementById("searchForm");
+        const catSelect = d.getElementById("category");
+        const qEl = d.getElementById("q");
+        const minEl = d.getElementById("priceMin");
+        const maxEl = d.getElementById("priceMax");
+        const sortEl = d.getElementById("sort");
+        const resetBtn = d.getElementById("svReset");
+        const PRODUCT_DETAIL_URL = "../sanpham/pages/product_detail.html";
+
+        const fmt = (n) => (Number(n) || 0).toLocaleString("vi-VN") + "₫";
+        const esc = (s) =>
+          String(s || "").replace(
+            /[&<>"']/g,
+            (m) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              }[m] || m)
+          );
+
+        function getStock(p) {
+          const raw =
+            p.stock ??
+            p.qty ??
+            p.quantity ??
+            p.inventory ??
+            p.quantity_in_stock ??
+            0;
+          const n = Number(raw);
+          return isNaN(n) ? 0 : n;
+        }
+        function isOut(p) {
+          const stock = getStock(p);
+          if (stock <= 0) return true;
+          const st = String(p.status || "").toLowerCase();
+          if (st === "hidden" || st === "inactive") return true;
+          const b = String(p.badge || "").toLowerCase();
+          if (b === "out_of_stock" || b === "oos") return true;
+          return false;
+        }
+        function badgeLabel(b) {
+          const x = String(b || "").toLowerCase();
+          if (x === "sale") return "Sale";
+          if (x === "new") return "New";
+          if (x === "out_of_stock" || x === "oos") return "Hết hàng";
+          return "";
+        }
+
+        /* 4. lấy dữ liệu sản phẩm */
+        function getAllProducts() {
+          try {
+            const fromAdmin = JSON.parse(
+              localStorage.getItem("sv_products_v1") || "[]"
+            );
+            if (Array.isArray(fromAdmin) && fromAdmin.length)
+              return fromAdmin.slice();
+          } catch (e) {}
+          return (
+            (w.SVStore && typeof w.SVStore.getAllProducts === "function"
+              ? w.SVStore.getAllProducts()
+              : w.SV_PRODUCT_SEED || []) || []
+          ).slice();
+        }
+
+        /* 5. fill danh mục */
+        function toSlug(s) {
+          return String(s || "")
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+        }
+        function loadCategoriesFromAdmin() {
+          try {
+            const raw = JSON.parse(
+              localStorage.getItem("admin.categories") || "[]"
+            );
+            return raw
+              .filter((c) => c && (c.active ?? true))
+              .map((c) => ({
+                slug:
+                  c.name === "Sáp vuốt tóc"
+                    ? "hair_wax"
+                    : c.name === "Gôm xịt"
+                    ? "hair_spray"
+                    : c.name === "Bột tạo phồng"
+                    ? "volumizing_powder"
+                    : toSlug(c.name),
+                name: c.name,
+              }));
+          } catch {
+            return [];
+          }
+        }
+        function loadCategoriesFromProducts() {
+          const set = new Set();
+          getAllProducts().forEach((p) => {
+            const c = String(p.category || "").trim();
+            if (c) set.add(c);
+          });
+          return [...set].map((slug) => ({
+            slug,
+            name: slug
+              .replace(/[-_]+/g, " ")
+              .replace(/\b\w/g, (c) => c.toUpperCase()),
+          }));
+        }
+        function fillCategorySelect(keepCurrent = true) {
+          if (!catSelect) return;
+          const current = catSelect.value;
+          const list = loadCategoriesFromAdmin();
+          const data = list.length ? list : loadCategoriesFromProducts();
+          let html = '<option value="all">Tất cả</option>';
+          data.forEach((c) => {
+            html += `<option value="${c.slug}">${c.name}</option>`;
+          });
+          catSelect.innerHTML = html;
+          if (
+            keepCurrent &&
+            (current === "all" || data.some((c) => c.slug === current))
+          )
+            catSelect.value = current;
+          else catSelect.value = "all";
+        }
+        fillCategorySelect(true);
+
+        /* 6. render 1 card */
+        function renderCard(p) {
+          const out = isOut(p);
+          const badge = badgeLabel(p.badge);
+          const hasOld =
+            p.original_price && Number(p.original_price) > Number(p.price);
+          const img =
+            p.image || p.thumbnail || "https://placehold.co/600x600/png";
+          const stock = getStock(p);
+          let stockHtml = "";
+          if (out) {
+            stockHtml =
+              '<div class="product-stock"><span class="stock-out"><i class="fa-regular fa-circle-xmark"></i> Hết hàng</span></div>';
+          } else if (stock <= 5) {
+            stockHtml = `<div class="product-stock"><span class="stock-low"><i class="fa-solid fa-triangle-exclamation"></i> Còn ${stock} sp · Sắp hết</span></div>`;
+          } else {
+            stockHtml = `<div class="product-stock"><span class="stock-in"><i class="fa-regular fa-circle-check"></i> Còn ${stock} sp</span></div>`;
+          }
+
+          return `
+            <div class="col col-3">
+              <div class="product-box ${out ? "is-out" : ""}">
+                <div class="product-thumbnail">
+                  <a class="image_link" href="${PRODUCT_DETAIL_URL}?id=${encodeURIComponent(
+            p.id
+          )}">
+                    <img src="${esc(img)}" alt="${esc(p.name)}" />
+                  </a>
+                  ${
+                    badge || out
+                      ? `<div class="product-label">
+                          ${
+                            badge
+                              ? `<span class="label">${esc(badge)}</span>`
+                              : ""
+                          }
+                          ${
+                            out
+                              ? `<span class="label label-oos">Hết hàng</span>`
+                              : ""
+                          }
+                        </div>`
+                      : ""
+                  }
+                  <div class="product-action-grid">
+                    ${
+                      out
+                        ? `<button class="btn-cart" disabled>Hết hàng</button>`
+                        : `<button class="btn-cart btn-add-cart" data-id="${esc(
+                            p.id
+                          )}"><i class="fa fa-plus"></i> Giỏ hàng</button>`
+                    }
+                  </div>
+                </div>
+                <div class="product-info a-left">
+                  <h3 class="product-name">
+                    <a href="${PRODUCT_DETAIL_URL}?id=${encodeURIComponent(
+            p.id
+          )}">${esc(p.name)}</a>
+                  </h3>
+                  <div class="price-box">
+                    <span class="price product-price">${fmt(p.price)}</span>
+                    ${
+                      hasOld
+                        ? `<span class="price product-price-old">${fmt(
+                            p.original_price
+                          )}</span>`
+                        : ""
+                    }
+                  </div>
+                  ${stockHtml}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        /* 7. lọc + phân trang */
+        const state = { view: [], page: 1, per: 8 };
+
+        function applyFilters(e) {
+          if (e) e.preventDefault();
+          const all = getAllProducts();
+          const q = (qEl.value || "").trim().toLowerCase();
+          const cat = catSelect.value || "all";
+          const min = Number(minEl.value || 0);
+          const max = Number(maxEl.value || 0);
+          const sort = sortEl.value || "";
+
+          let view = all.filter((p) => {
+            if (
+              q &&
+              !String(p.name || "")
+                .toLowerCase()
+                .includes(q)
+            )
+              return false;
+            if (cat !== "all" && String(p.category || "") !== cat) return false;
+            if (min && Number(p.price) < min) return false;
+            if (max && Number(p.price) > max) return false;
+            return true;
+          });
+
+          if (sort === "price-asc")
+            view.sort((a, b) => Number(a.price) - Number(b.price));
+          else if (sort === "price-desc")
+            view.sort((a, b) => Number(b.price) - Number(a.price));
+          else if (sort === "name-asc")
+            view.sort((a, b) =>
+              String(a.name || "").localeCompare(String(b.name || ""), "vi")
+            );
+          else if (sort === "name-desc")
+            view.sort((a, b) =>
+              String(b.name || "").localeCompare(String(a.name || ""), "vi")
+            );
+
+          // đẩy state lên URL
+          const u = new URL(location.href);
+          q ? u.searchParams.set("q", q) : u.searchParams.delete("q");
+          cat !== "all"
+            ? u.searchParams.set("category", cat)
+            : u.searchParams.delete("category");
+          min
+            ? u.searchParams.set("priceMin", String(min))
+            : u.searchParams.delete("priceMin");
+          max
+            ? u.searchParams.set("priceMax", String(max))
+            : u.searchParams.delete("priceMax");
+          sort
+            ? u.searchParams.set("sort", sort)
+            : u.searchParams.delete("sort");
+          history.replaceState({}, "", u.pathname + (u.search ? u.search : ""));
+
+          state.view = view;
+          state.page = 1;
+          renderPage();
+        }
+
+        function renderPagination(total, cur, per) {
+          if (!PAGING) return;
+          const pages = Math.max(1, Math.ceil(total / per));
+          if (pages <= 1) {
+            PAGING.innerHTML = "";
+            PAGING.parentElement.style.display = "none";
+            return;
+          }
+          PAGING.parentElement.style.display = "flex";
+
+          const li = (p, label, active = false, disabled = false) => {
+            const cls = [
+              "page-item",
+              active ? "active" : "",
+              disabled ? "disabled" : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
+            return `<li class="${cls}"><a class="page-link" href="#" ${
+              disabled ? "" : `data-page="${p}"`
+            }>${label}</a></li>`;
+          };
+
+          let html = "";
+          html += li(cur - 1, "‹", false, cur === 1);
+
+          const win = 2;
+          let from = Math.max(1, cur - win);
+          let to = Math.min(pages, cur + win);
+
+          if (from > 1) {
+            html += li(1, "1", cur === 1);
+            if (from > 2)
+              html +=
+                '<li class="page-item disabled"><span class="page-link">…</span></li>';
+          }
+          for (let i = from; i <= to; i++) {
+            html += li(i, String(i), i === cur);
+          }
+          if (to < pages) {
+            if (to < pages - 1)
+              html +=
+                '<li class="page-item disabled"><span class="page-link">…</span></li>';
+            html += li(pages, String(pages), cur === pages);
+          }
+          html += li(cur + 1, "›", false, cur === pages);
+          PAGING.innerHTML = html;
+        }
+
+        function renderPage() {
+          const { view, page, per } = state;
+          const pages = Math.max(1, Math.ceil(view.length / per));
+          const cur = Math.min(Math.max(1, page), pages);
+          const start = (cur - 1) * per;
+          const slice = view.slice(start, start + per);
+          ROOT.innerHTML = slice.map(renderCard).join("");
+          renderPagination(view.length, cur, per);
+          state.page = cur;
+        }
+
+        /* 8. init từ URL */
+        (function initFilters() {
+          const u = new URL(location.href);
+          if (qEl) qEl.value = u.searchParams.get("q") || "";
+          if (catSelect)
+            catSelect.value = u.searchParams.get("category") || "all";
+          if (minEl) minEl.value = u.searchParams.get("priceMin") || "";
+          if (maxEl) maxEl.value = u.searchParams.get("priceMax") || "";
+          if (sortEl) sortEl.value = u.searchParams.get("sort") || "";
+
+          FORM?.addEventListener("submit", applyFilters);
+          sortEl?.addEventListener("change", applyFilters);
+          resetBtn?.addEventListener("click", () => {
+            qEl.value = "";
+            catSelect.value = "all";
+            minEl.value = "";
+            maxEl.value = "";
+            sortEl.value = "";
+            FORM.dispatchEvent(new Event("submit", { cancelable: true }));
+          });
+
+          applyFilters();
+        })();
+
+        /* 9. click phân trang */
+        d.addEventListener("click", (e) => {
+          const a = e.target.closest("#pagination .page-link");
+          if (!a) return;
+          e.preventDefault();
+          const p = Number(a.getAttribute("data-page"));
+          if (p && !isNaN(p)) {
+            state.page = p;
+            renderPage();
+            const top = d.querySelector(".page-main")?.offsetTop || 0;
+            w.scrollTo({ top, behavior: "smooth" });
+          }
+        });
+
+        /* 10. add to cart (bắt đăng nhập + check tồn) */
+        function getCurrentUserEmail() {
+          try {
+            if (w.AUTH?.getCurrentUser)
+              return w.AUTH.getCurrentUser()?.email || null;
+            if (w.AUTH?.currentUser) return w.AUTH.currentUser.email || null;
+          } catch {}
+          return null;
+        }
+        function redirectToLogin() {
+          const back = location.pathname + location.search + location.hash;
+          location.href =
+            "../account/login.html?redirect=" + encodeURIComponent(back);
+        }
+        function getProductById(id) {
+          const list = getAllProducts();
+          return list.find((p) => String(p.id) === String(id)) || null;
+        }
+        function getCartQty(id) {
+          try {
+            if (w.SVStore?.getCartItemQty) {
+              const n = Number(w.SVStore.getCartItemQty(id) || 0);
+              if (!isNaN(n)) return n;
+            }
+          } catch {}
+          try {
+            if (w.SVStore?.getCart) {
+              const cart = w.SVStore.getCart() || [];
+              const f = cart.find(
+                (i) => String(i.id ?? i.productId) === String(id)
+              );
+              if (f) return Number(f.qty ?? f.quantity ?? 0) || 0;
+            }
+          } catch {}
+          try {
+            const email = getCurrentUserEmail();
+            if (email) {
+              const key = "sv_cart_user_" + email;
+              const cart = JSON.parse(localStorage.getItem(key) || "[]");
+              const f = cart.find(
+                (i) => String(i.id ?? i.productId) === String(id)
+              );
+              if (f) return Number(f.qty ?? f.quantity ?? 0) || 0;
+            }
+          } catch {}
+          return 0;
+        }
+        function addToCartWithCheck(id) {
+          const p = getProductById(id);
+          if (!p) {
+            alert("Sản phẩm không tồn tại hoặc đã bị xoá.");
+            return;
+          }
+          const stock = getStock(p);
+          if (stock <= 0) {
+            alert("Sản phẩm đã hết hàng.");
+            return;
+          }
+          const inCart = getCartQty(id);
+          if (inCart >= stock) {
+            alert("Bạn đã thêm tối đa số lượng hiện có.");
+            return;
+          }
+          if (w.SVStore?.addToCart) {
+            w.SVStore.addToCart(id, 1);
+            w.dispatchEvent(new CustomEvent("cart:changed"));
+            w.SVUI?.updateCartCount?.();
+          } else {
+            alert("Chưa cấu hình giỏ hàng.");
+          }
+        }
+
+        d.addEventListener(
+          "click",
+          function (e) {
+            const btn = e.target.closest(
+              ".btn-add-cart, .btn-cart, [data-add-to-cart], .js-add-to-cart, a.quick-add"
+            );
+            if (!btn) return;
+            e.preventDefault();
+
+            const email = getCurrentUserEmail();
+            const logged =
+              email ||
+              (w.AUTH && (w.AUTH.loggedIn || w.AUTH.isAuthenticated?.()));
+            if (!logged) {
+              alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ!");
+              redirectToLogin();
+              return;
+            }
+
+            let id =
+              btn.dataset.id || (btn.getAttribute("href") || "").includes("id=")
+                ? new URL(
+                    btn.getAttribute("href"),
+                    location.origin
+                  ).searchParams.get("id")
+                : "";
+            if (!id) return;
+
+            addToCartWithCheck(id);
+
+            const prev = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-check"></i> Đã thêm';
+            setTimeout(() => {
+              btn.disabled = false;
+              btn.innerHTML = prev;
+            }, 900);
+          },
+          true
+        );
+
+        // cập nhật khi storage đổi
+        w.addEventListener("storage", (e) => {
+          if (e.key && e.key.startsWith("sv_cart_user_")) {
+            w.SVUI?.updateCartCount?.();
+          }
+          if (
+            e.key === "sv_products_v1" ||
+            e.key === "catalog.bump" ||
+            e.key === "admin.categories"
+          ) {
+            fillCategorySelect(true);
+            applyFilters();
+          }
+        });
+        w.addEventListener("cart:changed", () => w.SVUI?.updateCartCount?.());
+      })(window, document);
+    </script>
+  </body>
+</html>
