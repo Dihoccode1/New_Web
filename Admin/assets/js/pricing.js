@@ -60,7 +60,7 @@ function mapAdminProdToPublic(p, cats) {
     category,
     price: Number(p.price) || 0,
     original_price: undefined,
-    image: p.image || "/assets/images/placeholder.png",
+    image: p.image || "./assets/images/placeholder.png",
     images: p.image ? [p.image] : [],
     badge: "",
     featured: false,
