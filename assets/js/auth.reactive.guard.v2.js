@@ -18,7 +18,7 @@
   function log(){ if(DEBUG) try{ console.log.apply(console, ['[guard.v2.2]'].concat([].slice.call(arguments))); }catch(_){} }
 
   var PATH = (location.pathname || '').toLowerCase();
-  var IS_LOGIN = PATH.endsWith('../../account/login.html') || PATH.endsWith('../../account/login');
+  var IS_LOGIN = PATH.endsWith('../../account/login.html') || PATH.endsWith('../../account/login.html');
   var REDIRECT_FLAG = 'sv_guard_redirecting_v22';
 
   // ========= One-time render guard =========
