@@ -62,6 +62,158 @@
   const canDeliver = (s) => s === "confirmed";
   const canCancel = (s) => s === "new" || s === "confirmed";
 
+  /* ================== 5 ĐƠN TĨNH (DEMO) ==================
+     - luôn được merge vào danh sách admin
+     - KHÔNG ghi chữ "mẫu", nhìn như đơn thật
+     - nếu LocalStorage bị xoá -> reload lại trang vẫn có 5 đơn này
+     ====================================================== */
+  const STATIC_ORDERS = [
+    {
+      id: "OD_STATIC_001",
+      code: "OD-20241028-001",
+      created_at: "2024-10-28T09:15:00+07:00",
+      status: "new",
+      note: "Khách yêu cầu giao trong giờ hành chính.",
+      email: "khach1@example.com",
+      shipping: {
+        fullname: "Nguyễn Văn A",
+        phone: "0900000001",
+        address: "12 Lê Lợi",
+        ward: "Phường Bến Nghé",
+        district: "Quận 1",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P1",
+          code: "SP001",
+          name: "Sáp vuốt tóc demo 1",
+          price: 250000,
+          qty: 1,
+        },
+        {
+          id: "P2",
+          code: "SP002",
+          name: "Gôm xịt tóc demo",
+          price: 180000,
+          qty: 1,
+        },
+      ],
+      total: 430000,
+      inventoryCommitted: false,
+    },
+    {
+      id: "OD_STATIC_002",
+      code: "OD-20241029-002",
+      created_at: "2024-10-29T14:20:00+07:00",
+      status: "new",
+      note: "",
+      email: "khach2@example.com",
+      shipping: {
+        fullname: "Trần Thị B",
+        phone: "0900000002",
+        address: "45 Nguyễn Huệ",
+        ward: "Phường Bến Nghé",
+        district: "Quận 1",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P3",
+          code: "SP003",
+          name: "Bột tạo phồng demo",
+          price: 220000,
+          qty: 2,
+        },
+      ],
+      total: 440000,
+      inventoryCommitted: false,
+    },
+    {
+      id: "OD_STATIC_003",
+      code: "OD-20241101-003",
+      created_at: "2024-11-01T10:05:00+07:00",
+      status: "confirmed",
+      note: "Đã gọi xác nhận với khách.",
+      email: "khach3@example.com",
+      shipping: {
+        fullname: "Lê Văn C",
+        phone: "0900000003",
+        address: "23 Cách Mạng Tháng 8",
+        ward: "Phường 11",
+        district: "Quận 3",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P1",
+          code: "SP001",
+          name: "Sáp vuốt tóc demo 1",
+          price: 250000,
+          qty: 1,
+        },
+      ],
+      total: 250000,
+      inventoryCommitted: false,
+    },
+    {
+      id: "OD_STATIC_004",
+      code: "OD-20241102-004",
+      created_at: "2024-11-02T16:30:00+07:00",
+      status: "delivered",
+      note: "Khách thanh toán tiền mặt.",
+      email: "khach4@example.com",
+      shipping: {
+        fullname: "Phạm Thị D",
+        phone: "0900000004",
+        address: "89 Trường Chinh",
+        ward: "Phường Tây Thạnh",
+        district: "Tân Phú",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P2",
+          code: "SP002",
+          name: "Gôm xịt tóc demo",
+          price: 180000,
+          qty: 2,
+        },
+      ],
+      total: 360000,
+      inventoryCommitted: true, // giả sử đã trừ kho
+      deliveredAt: "2024-11-02T18:00:00+07:00",
+    },
+    {
+      id: "OD_STATIC_005",
+      code: "OD-20241103-005",
+      created_at: "2024-11-03T11:45:00+07:00",
+      status: "canceled",
+      note: "Khách yêu cầu huỷ đơn.",
+      email: "khach5@example.com",
+      shipping: {
+        fullname: "Đỗ Văn E",
+        phone: "0900000005",
+        address: "56 Phan Đăng Lưu",
+        ward: "Phường 5",
+        district: "Phú Nhuận",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P4",
+          code: "SP004",
+          name: "Sáp vuốt tóc demo 2",
+          price: 270000,
+          qty: 1,
+        },
+      ],
+      total: 270000,
+      inventoryCommitted: false,
+      canceledAt: "2024-11-03T12:10:00+07:00",
+    },
+  ];
+
   /* ================== Chuẩn hoá đơn từ nhiều schema ================== */
   function normalize(list) {
     return (Array.isArray(list) ? list : []).map((o, i) => {
@@ -174,15 +326,19 @@
     return flat;
   }
 
-  /* ================== Hợp nhất admin + flat ================== */
+  /* ================== Hợp nhất admin + flat + STATIC ================== */
   function loadAdminOrdersMerged() {
     let adminList = LS.get(KEYS.ADMIN, []);
     const userFlat = LS.get(KEYS.FLAT, []) ?? [];
 
     const map = new Map(
-      (Array.isArray(adminList) ? adminList : []).map((o) => [String(o.id), o])
+      (Array.isArray(adminList) ? adminList : []).map((o) => [
+        String(o.id),
+        o,
+      ])
     );
 
+    // merge từ flat (user)
     for (const u of Array.isArray(userFlat) ? userFlat : []) {
       const norm = normalize([u])[0];
       const id = String(norm.id);
@@ -204,6 +360,14 @@
         });
       } else {
         map.set(id, norm);
+      }
+    }
+
+    // ✅ merge thêm 5 đơn TĨNH
+    for (const s of STATIC_ORDERS) {
+      const id = String(s.id);
+      if (!map.has(id)) {
+        map.set(id, s);
       }
     }
 
@@ -647,12 +811,11 @@
     if (e.target === modal) closeModal();
   });
 
-  // ✅ FIX: sau khi cập nhật trạng thái trong modal, load lại list rồi render
+  // sau khi cập nhật trạng thái trong modal, load lại list rồi render
   mBtnUpdate?.addEventListener("click", () => {
     if (!state.modalId) return;
     try {
       updateStatus(state.modalId, mStatusSel.value);
-      // đồng bộ lại state.list từ localStorage
       state.list = loadAdminOrdersMerged();
       closeModal();
       render();
@@ -683,14 +846,14 @@
       if (act === "confirm") {
         if (!canConfirm(st)) return;
         updateStatus(id, "confirmed");
-        state.list = loadAdminOrdersMerged(); // ✅ FIX
+        state.list = loadAdminOrdersMerged();
         render();
         return;
       }
       if (act === "deliver") {
         if (!canDeliver(st)) return;
         updateStatus(id, "delivered");
-        state.list = loadAdminOrdersMerged(); // ✅ FIX
+        state.list = loadAdminOrdersMerged();
         render();
         return;
       }
@@ -698,7 +861,7 @@
         if (!canCancel(st)) return;
         if (!confirm("Xác nhận huỷ đơn này?")) return;
         updateStatus(id, "canceled");
-        state.list = loadAdminOrdersMerged(); // ✅ FIX
+        state.list = loadAdminOrdersMerged();
         render();
         return;
       }

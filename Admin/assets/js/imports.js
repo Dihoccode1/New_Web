@@ -5,6 +5,7 @@
    - Nhà cung cấp được suy ra từ tên sản phẩm:
      Davines, TIGI, Kevin Murphy, Butterfly Shadow,
      Luxurious, Apestomen, Hanz de Fuko
+   - Thêm 5 PHIẾU MẪU TĨNH: luôn luôn có, kể cả khi xóa localStorage
    ============================================================ */
 
 (function () {
@@ -38,6 +39,132 @@
     // fallback để vẫn có NCC nhìn cho đẹp
     return SUPPLIER_NAMES[fallbackIndex % SUPPLIER_NAMES.length];
   }
+
+  // ============================================================
+  // 5 PHIẾU MẪU TĨNH — LUÔN LUÔN CÓ (không phụ thuộc localStorage)
+  // ============================================================
+  const STATIC_SAMPLE_RECEIPTS = [
+    {
+      id: "PN_STATIC_1",
+      code: "PN-20241028-001",
+      date: "2024-10-28",
+      supplier: "Davines",
+      note: "Phiếu nhập tĩnh – Davines Extra Strong Hairspray 400ml",
+      status: "completed",
+      items: [
+        {
+          productId: null,
+          productCode: "DVN-ES-400",
+          productName: "Davines Extra Strong Hairspray 400ml",
+          lotCode: "STATIC-DAV-01",
+          costPrice: 250000,
+          quantity: 12,
+        },
+      ],
+      totalCost: 3000000, // 250.000 * 12
+      totalQty: 12,
+      createdAt: new Date("2024-10-28T09:00:00").getTime(),
+      updatedAt: new Date("2024-10-28T09:00:00").getTime(),
+      completedAt: new Date("2024-10-28T09:15:00").getTime(),
+      isStatic: true,
+    },
+    {
+      id: "PN_STATIC_2",
+      code: "PN-20241030-002",
+      date: "2024-10-30",
+      supplier: "TIGI",
+      note: "Phiếu nhập mẫu tĩnh – TIGI Bed Head Hairspray 400ml",
+      status: "completed",
+      items: [
+        {
+          productId: null,
+          productCode: "TIGI-BH-400",
+          productName: "TIGI Bed Head Hairspray 400ml",
+          lotCode: "STATIC-TIGI-01",
+          costPrice: 210000,
+          quantity: 24,
+        },
+      ],
+      totalCost: 5040000, // 210.000 * 24
+      totalQty: 24,
+      createdAt: new Date("2024-10-30T10:00:00").getTime(),
+      updatedAt: new Date("2024-10-30T10:00:00").getTime(),
+      completedAt: new Date("2024-10-30T10:20:00").getTime(),
+      isStatic: true,
+    },
+    {
+      id: "PN_STATIC_3",
+      code: "PN-20241101-003",
+      date: "2024-11-01",
+      supplier: "Kevin Murphy",
+      note: "Phiếu nhập mẫu tĩnh – Kevin Murphy Session Spray 400ml",
+      status: "completed",
+      items: [
+        {
+          productId: null,
+          productCode: "KM-SS-400",
+          productName: "Kevin Murphy Session Spray 400ml",
+          lotCode: "STATIC-KM-01",
+          costPrice: 280000,
+          quantity: 18,
+        },
+      ],
+      totalCost: 5040000, // 280.000 * 18
+      totalQty: 18,
+      createdAt: new Date("2024-11-01T09:30:00").getTime(),
+      updatedAt: new Date("2024-11-01T09:30:00").getTime(),
+      completedAt: new Date("2024-11-01T09:45:00").getTime(),
+      isStatic: true,
+    },
+    {
+      id: "PN_STATIC_4",
+      code: "PN-20241103-004",
+      date: "2024-11-03",
+      supplier: "Butterfly Shadow",
+      note: "Phiếu nhập mẫu tĩnh – Butterfly Shadow Hair Spray 320ml",
+      status: "completed",
+      items: [
+        {
+          productId: null,
+          productCode: "BFS-320",
+          productName: "Butterfly Shadow Hair Spray 320ml",
+          lotCode: "STATIC-BFS-01",
+          costPrice: 120000,
+          quantity: 30,
+        },
+      ],
+      totalCost: 3600000, // 120.000 * 30
+      totalQty: 30,
+      createdAt: new Date("2024-11-03T14:00:00").getTime(),
+      updatedAt: new Date("2024-11-03T14:00:00").getTime(),
+      completedAt: new Date("2024-11-03T14:10:00").getTime(),
+      isStatic: true,
+    },
+    {
+      id: "PN_STATIC_5",
+      code: "PN-20241105-005",
+      date: "2024-11-05",
+      supplier: "Apestomen",
+      note: "Phiếu nhập mẫu tĩnh – Apestomen Volcanic Clay 80g",
+      status: "completed",
+      items: [
+        {
+          productId: null,
+          productCode: "APM-VC-80",
+          productName: "Apestomen Volcanic Clay 80g",
+          lotCode: "STATIC-APM-01",
+          costPrice: 190000,
+          quantity: 20,
+        },
+      ],
+      totalCost: 3800000, // 190.000 * 20
+      totalQty: 20,
+      createdAt: new Date("2024-11-05T11:00:00").getTime(),
+      updatedAt: new Date("2024-11-05T11:00:00").getTime(),
+      completedAt: new Date("2024-11-05T11:10:00").getTime(),
+      isStatic: true,
+    },
+  ];
 
   // ===== Helpers =====
   const $ = (s, ctx = document) => ctx.querySelector(s);
@@ -82,19 +209,22 @@
 
   // ===== Cache receipts =====
   let _RECEIPTS_CACHE = null;
+
   function receiptsRead() {
     if (!_RECEIPTS_CACHE) {
-      _RECEIPTS_CACHE = jget(RECEIPT_KEY, []).sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
+      const stored = jget(RECEIPT_KEY, []);
+      const merged = STATIC_SAMPLE_RECEIPTS.concat(stored || []);
+      merged.sort((a, b) => new Date(b.date) - new Date(a.date));
+      _RECEIPTS_CACHE = merged;
     }
     return _RECEIPTS_CACHE;
   }
+
+  // Lưu CHỈ phần phiếu động (không lưu phiếu tĩnh isStatic)
   function receiptsWrite(arr) {
-    _RECEIPTS_CACHE = (arr || []).sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
-    );
-    jset(RECEIPT_KEY, _RECEIPTS_CACHE);
+    const dynamic = (arr || []).filter((r) => !r || !r.isStatic);
+    jset(RECEIPT_KEY, dynamic);
+    _RECEIPTS_CACHE = null; // reset cache, lần sau đọc lại sẽ trộn với STATIC_SAMPLE_RECEIPTS
     ping("receipts.bump");
   }
 
@@ -210,10 +340,11 @@
   }
 
   /* ============================================================
-   🔥 SEED PHIẾU NHẬP MẪU V2 – MỖI PHIẾU 1 SẢN PHẨM
+   🔥 SEED PHIẾU NHẬP MẪU V2 – MỖI PHIẾU 1 SẢN PHẨM (động)
    - Không đè dữ liệu thật
-   - Mục tiêu: ~8 phiếu mẫu
+   - Mục tiêu: ~8 phiếu mẫu (dựa trên admin.products)
    - Chỉ chạy 1 lần theo key "admin.importSeeded.v2"
+   - LƯU Ý: Phiếu tĩnh ở trên KHÔNG phụ thuộc đoạn seed này
    ============================================================ */
   function seedReceiptsFromProductsOnceV2() {
     const flag = "admin.importSeeded.v2";
@@ -501,7 +632,7 @@
 
         return `
         <tr>
-          <td><b>${r.code}</b></td>
+          <td><b>${r.code}</b>${r.isStatic ? ' <span style="font-size:11px;color:#999">(mẫu)</span>' : ""}</td>
           <td>${r.date}</td>
           <td>${preview}${more}</td>
           <td>${esc(r.supplier || "")}</td>
@@ -513,12 +644,12 @@
               r.id
             }" class="btn sm">Xem</button>
             ${
-              r.status === "draft"
+              !r.isStatic && r.status === "draft"
                 ? `<button data-act="edit" data-id="${r.id}" class="btn sm">Sửa</button>`
                 : ""
             }
             ${
-              r.status === "draft"
+              !r.isStatic && r.status === "draft"
                 ? `<button data-act="complete" data-id="${r.id}" class="btn sm primary">Hoàn thành</button>`
                 : ""
             }
@@ -552,13 +683,14 @@
     $meta.innerHTML = cur
       ? `Mã phiếu: <b>${esc(cur.code)}</b> – Trạng thái: <b>${esc(
           cur.status
-        )}</b>`
+        )}</b>${cur.isStatic ? " – <i>Phiếu mẫu tĩnh</i>" : ""}`
       : "";
 
-    const editable = !readonly && (!cur || cur.status === "draft");
+    const editable =
+      !readonly && (!cur || (cur.status === "draft" && !cur.isStatic));
     $btnSave.style.display = editable ? "inline-flex" : "none";
     $btnComplete.style.display =
-      cur && cur.status === "draft" ? "inline-flex" : "none";
+      cur && cur.status === "draft" && !cur.isStatic ? "inline-flex" : "none";
 
     renderLines();
     $modal.classList.add("show");
@@ -700,7 +832,7 @@
   /* INIT */
   (function init() {
     removeOldSampleReceiptV1(); // dọn phiếu mẫu cũ
-    seedReceiptsFromProductsOnceV2(); // seed thêm phiếu mẫu nếu thiếu
+    seedReceiptsFromProductsOnceV2(); // seed thêm phiếu mẫu động nếu thiếu
     migrateSampleSuppliersByProductName(); // sửa lại NCC theo tên SP
     $date.value = today();
     reload();

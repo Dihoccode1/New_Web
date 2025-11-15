@@ -1,5 +1,5 @@
 /*
-  inventory.js – Tồn kho & Báo cáo (full, đã fix)
+  inventory.js – Tồn kho & Báo cáo (auto run)
   Kết nối trực tiếp với:
     admin.categories : [{id, code, name, active, ...}]
     admin.products   : [{id, code, name, categoryId, qty, status, ...}]
@@ -470,6 +470,12 @@
     const m = d.getMonth();
     if ($("#r-from")) $("#r-from").value = toInputDate(new Date(y, m, 1));
     if ($("#r-to")) $("#r-to").value = toInputDate(new Date(y, m + 1, 0));
+
+    // ngưỡng cảnh báo mặc định = 5
+    if ($("#low-threshold") && !$("#low-threshold").value) {
+      $("#low-threshold").value = 5;
+    }
+
     if ($("#at-result")) {
       $("#at-result").innerHTML =
         '<span class="muted">Chọn sản phẩm/loại và thời điểm để tra cứu tồn.</span>';
@@ -496,6 +502,11 @@
     loadAll();
     initUI();
     bindEvents();
+
+    // ✅ TỰ CHẠY KHI VÀO TRANG
+    handleCheckAt(); // khối 1: tồn tại thời điểm (tất cả SP, thời điểm hiện tại)
+    runReport();     // khối 2: báo cáo NX tồn tháng hiện tại
+    checkLow();      // khối 3: cảnh báo sắp hết với ngưỡng mặc định
   }
   boot();
 
@@ -504,6 +515,11 @@
     if ([LS_CATS, LS_PRODS, LS_TX].includes(e.key)) {
       loadAll();
       initUI();
+
+      // ✅ TỰ CẬP NHẬT LẠI KHI DỮ LIỆU THAY ĐỔI
+      handleCheckAt();
+      runReport();
+      checkLow();
     }
   });
 })();
