@@ -46,11 +46,58 @@
         --shadow-md: 0 12px 28px rgba(17, 24, 39, 0.12);
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
       }
-      body {
-        font-family: Roboto, system-ui, -apple-system, Segoe UI, Arial,
-          sans-serif;
-        color: var(--text);
+      .topbar {
+        background: #fff;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
       }
+      .topbar > .container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        gap: 12px;
+      }
+      .topbar-right a {
+        margin-left: 10px;
+        padding: 5px 12px;
+        font-size: 13px;
+        border-radius: 4px;
+        transition: 0.3s;
+        text-decoration: none;
+      }
+
+      /* Nút outline: ĐĂNG KÝ */
+      .btn-outline {
+        border: 1px solid #333;
+        color: #333;
+        background: #fff;
+      }
+      .btn-outline:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      /* Nút primary: ĐĂNG NHẬP (và logout nếu có) */
+      .btn-primary,
+      .btn-logout {
+        background: #333 !important;
+        color: #fff !important;
+        border: 1px solid #333 !important;
+        border-radius: 4px !important;
+        padding: 5px 12px !important;
+        font-size: 13px !important;
+        transition: 0.3s !important;
+        display: inline-block !important;
+      }
+      .btn-primary:hover,
+      .btn-logout:hover {
+        background: #555 !important;
+      }
+
       .page-main .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -477,6 +524,7 @@
           font-size: 15px !important;
         }
       }
+      
     </style>
   </head>
   <body>
@@ -1107,64 +1155,81 @@
 
         /* 7. lọc + phân trang */
         const state = { view: [], page: 1, per: 8 };
-
+        function normalizeText(str) {
+  return String(str || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, ""); // bỏ dấu tiếng Việt
+}
         function applyFilters(e) {
-          if (e) e.preventDefault();
-          const all = getAllProducts();
-          const q = (qEl.value || "").trim().toLowerCase();
-          const cat = catSelect.value || "all";
-          const min = Number(minEl.value || 0);
-          const max = Number(maxEl.value || 0);
-          const sort = sortEl.value || "";
+  if (e) e.preventDefault();
+  const all = getAllProducts();
 
-          let view = all.filter((p) => {
-            if (
-              q &&
-              !String(p.name || "")
-                .toLowerCase()
-                .includes(q)
-            )
-              return false;
-            if (cat !== "all" && String(p.category || "") !== cat) return false;
-            if (min && Number(p.price) < min) return false;
-            if (max && Number(p.price) > max) return false;
-            return true;
-          });
+  // LẤY KEYWORD TỪ Ô TÌM KIẾM
+  const rawQ = (qEl?.value || "").trim().replace(/\s+/g, " ");
+  const qNormalized = normalizeText(rawQ);
 
-          if (sort === "price-asc")
-            view.sort((a, b) => Number(a.price) - Number(b.price));
-          else if (sort === "price-desc")
-            view.sort((a, b) => Number(b.price) - Number(a.price));
-          else if (sort === "name-asc")
-            view.sort((a, b) =>
-              String(a.name || "").localeCompare(String(b.name || ""), "vi")
-            );
-          else if (sort === "name-desc")
-            view.sort((a, b) =>
-              String(b.name || "").localeCompare(String(a.name || ""), "vi")
-            );
+  const cat = catSelect.value || "all";
+  const min = Number(minEl.value || 0);
+  const max = Number(maxEl.value || 0);
+  const sort = sortEl.value || "";
 
-          // đẩy state lên URL
-          const u = new URL(location.href);
-          q ? u.searchParams.set("q", q) : u.searchParams.delete("q");
-          cat !== "all"
-            ? u.searchParams.set("category", cat)
-            : u.searchParams.delete("category");
-          min
-            ? u.searchParams.set("priceMin", String(min))
-            : u.searchParams.delete("priceMin");
-          max
-            ? u.searchParams.set("priceMax", String(max))
-            : u.searchParams.delete("priceMax");
-          sort
-            ? u.searchParams.set("sort", sort)
-            : u.searchParams.delete("sort");
-          history.replaceState({}, "", u.pathname + (u.search ? u.search : ""));
+  let view = all.filter((p) => {
+    const nameNormalized = normalizeText(p.name);
 
-          state.view = view;
-          state.page = 1;
-          renderPage();
-        }
+    // 1️⃣ Nếu có nhập từ khoá → tên phải bắt đầu bằng keyword
+    if (qNormalized && !nameNormalized.startsWith(qNormalized)) return false;
+
+    // 2️⃣ Lọc theo category
+    if (cat !== "all" && String(p.category || "") !== cat) return false;
+
+    // 3️⃣ Lọc theo giá
+    if (min && Number(p.price) < min) return false;
+    if (max && Number(p.price) > max) return false;
+
+    return true;
+  });
+
+  // Sắp xếp
+  if (sort === "price-asc")
+    view.sort((a, b) => Number(a.price) - Number(b.price));
+  else if (sort === "price-desc")
+    view.sort((a, b) => Number(b.price) - Number(a.price));
+  else if (sort === "name-asc")
+    view.sort((a, b) =>
+      String(a.name || "").localeCompare(String(b.name || ""), "vi")
+    );
+  else if (sort === "name-desc")
+    view.sort((a, b) =>
+      String(b.name || "").localeCompare(String(a.name || ""), "vi")
+    );
+
+  // ĐẨY FILTER LÊN URL (DÙNG rawQ CHỨ KHÔNG DÙNG q)
+  const u = new URL(location.href);
+  if (rawQ) u.searchParams.set("q", rawQ);
+  else u.searchParams.delete("q");
+
+  cat !== "all"
+    ? u.searchParams.set("category", cat)
+    : u.searchParams.delete("category");
+  min
+    ? u.searchParams.set("priceMin", String(min))
+    : u.searchParams.delete("priceMin");
+  max
+    ? u.searchParams.set("priceMax", String(max))
+    : u.searchParams.delete("priceMax");
+  sort
+    ? u.searchParams.set("sort", sort)
+    : u.searchParams.delete("sort");
+
+  history.replaceState({}, "", u.pathname + (u.search ? u.search : ""));
+
+  state.view = view;
+  state.page = 1;
+  renderPage();
+}
+
 
         function renderPagination(total, cur, per) {
           if (!PAGING) return;

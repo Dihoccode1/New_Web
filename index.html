@@ -617,7 +617,7 @@
           <div class="header-left">
             <!-- Chặn autofill & gõ dấu ok -->
             <form
-              action="/search"
+              action="./sanpham/sanpham.html"
               method="get"
               class="search-bar"
               autocomplete="off"
@@ -675,7 +675,7 @@
             d.querySelector('nav.main-nav a[href*="/sanpham"]');
           return a && a.getAttribute("href")
             ? a.getAttribute("href")
-            : "/sanpham/sanpham.html";
+            : "./sanpham/sanpham.html";
         }
 
         var form = d.querySelector(".search-bar");
