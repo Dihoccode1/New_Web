@@ -1,11 +1,7 @@
 /* ============================================================
-   IMPORTS.JS — Quản lý phiếu nhập hàng (bản dùng NCC theo tên SP)
-   - Xoá phiếu mẫu cũ (1 phiếu nhiều sản phẩm, NCC = "Nhà cung cấp mẫu")
-   - Phiếu mẫu mới: mỗi phiếu 1 sản phẩm
-   - Nhà cung cấp được suy ra từ tên sản phẩm:
-     Davines, TIGI, Kevin Murphy, Butterfly Shadow,
-     Luxurious, Apestomen, Hanz de Fuko
-   - Thêm 5 PHIẾU MẪU TĨNH: luôn luôn có, kể cả khi xóa localStorage
+   IMPORTS.JS — Quản lý phiếu nhập hàng
+   - Luôn có dữ liệu mẫu mặc định, kể cả khi localStorage trống
+   - Dữ liệu thật của bạn vẫn lưu ở localStorage như bình thường
    ============================================================ */
 
 (function () {
@@ -15,156 +11,6 @@
   const CAT_KEY = "admin.categories";
   const TX_KEY = "admin.stock";
   const PUBLIC_CATALOG_KEY = "sv_products_v1";
-
-  // ===== Từ khóa nhà cung cấp =====
-  const SUPPLIER_KEYWORDS = [
-    { key: "davines", name: "Davines" },
-    { key: "tigi", name: "TIGI" },
-    { key: "kevin murphy", name: "Kevin Murphy" },
-    { key: "butterfly shadow", name: "Butterfly Shadow" },
-    { key: "luxurious", name: "Luxurious" },
-    { key: "apestomen", name: "Apestomen" },
-    { key: "hanz de fuko", name: "Hanz de Fuko" },
-  ];
-  const SUPPLIER_NAMES = SUPPLIER_KEYWORDS.map((s) => s.name);
-
-  // Đoán nhà cung cấp từ tên sản phẩm (ưu tiên theo key, nếu không thấy thì fallback)
-  function detectSupplierByName(productName, fallbackIndex = 0) {
-    const n = String(productName || "").toLowerCase();
-    if (n) {
-      for (const s of SUPPLIER_KEYWORDS) {
-        if (n.includes(s.key)) return s.name;
-      }
-    }
-    // fallback để vẫn có NCC nhìn cho đẹp
-    return SUPPLIER_NAMES[fallbackIndex % SUPPLIER_NAMES.length];
-  }
-
-  // ============================================================
-  // 5 PHIẾU MẪU TĨNH — LUÔN LUÔN CÓ (không phụ thuộc localStorage)
-  // ============================================================
-  const STATIC_SAMPLE_RECEIPTS = [
-    {
-      id: "PN_STATIC_1",
-      code: "PN-20241028-001",
-      date: "2024-10-28",
-      supplier: "Davines",
-      note: "Phiếu nhập tĩnh – Davines Extra Strong Hairspray 400ml",
-      status: "completed",
-      items: [
-        {
-          productId: null,
-          productCode: "DVN-ES-400",
-          productName: "Davines Extra Strong Hairspray 400ml",
-          lotCode: "STATIC-DAV-01",
-          costPrice: 250000,
-          quantity: 12,
-        },
-      ],
-      totalCost: 3000000, // 250.000 * 12
-      totalQty: 12,
-      createdAt: new Date("2024-10-28T09:00:00").getTime(),
-      updatedAt: new Date("2024-10-28T09:00:00").getTime(),
-      completedAt: new Date("2024-10-28T09:15:00").getTime(),
-      isStatic: true,
-    },
-    {
-      id: "PN_STATIC_2",
-      code: "PN-20241030-002",
-      date: "2024-10-30",
-      supplier: "TIGI",
-      note: "Phiếu nhập mẫu tĩnh – TIGI Bed Head Hairspray 400ml",
-      status: "completed",
-      items: [
-        {
-          productId: null,
-          productCode: "TIGI-BH-400",
-          productName: "TIGI Bed Head Hairspray 400ml",
-          lotCode: "STATIC-TIGI-01",
-          costPrice: 210000,
-          quantity: 24,
-        },
-      ],
-      totalCost: 5040000, // 210.000 * 24
-      totalQty: 24,
-      createdAt: new Date("2024-10-30T10:00:00").getTime(),
-      updatedAt: new Date("2024-10-30T10:00:00").getTime(),
-      completedAt: new Date("2024-10-30T10:20:00").getTime(),
-      isStatic: true,
-    },
-    {
-      id: "PN_STATIC_3",
-      code: "PN-20241101-003",
-      date: "2024-11-01",
-      supplier: "Kevin Murphy",
-      note: "Phiếu nhập mẫu tĩnh – Kevin Murphy Session Spray 400ml",
-      status: "completed",
-      items: [
-        {
-          productId: null,
-          productCode: "KM-SS-400",
-          productName: "Kevin Murphy Session Spray 400ml",
-          lotCode: "STATIC-KM-01",
-          costPrice: 280000,
-          quantity: 18,
-        },
-      ],
-      totalCost: 5040000, // 280.000 * 18
-      totalQty: 18,
-      createdAt: new Date("2024-11-01T09:30:00").getTime(),
-      updatedAt: new Date("2024-11-01T09:30:00").getTime(),
-      completedAt: new Date("2024-11-01T09:45:00").getTime(),
-      isStatic: true,
-    },
-    {
-      id: "PN_STATIC_4",
-      code: "PN-20241103-004",
-      date: "2024-11-03",
-      supplier: "Butterfly Shadow",
-      note: "Phiếu nhập mẫu tĩnh – Butterfly Shadow Hair Spray 320ml",
-      status: "completed",
-      items: [
-        {
-          productId: null,
-          productCode: "BFS-320",
-          productName: "Butterfly Shadow Hair Spray 320ml",
-          lotCode: "STATIC-BFS-01",
-          costPrice: 120000,
-          quantity: 30,
-        },
-      ],
-      totalCost: 3600000, // 120.000 * 30
-      totalQty: 30,
-      createdAt: new Date("2024-11-03T14:00:00").getTime(),
-      updatedAt: new Date("2024-11-03T14:00:00").getTime(),
-      completedAt: new Date("2024-11-03T14:10:00").getTime(),
-      isStatic: true,
-    },
-    {
-      id: "PN_STATIC_5",
-      code: "PN-20241105-005",
-      date: "2024-11-05",
-      supplier: "Apestomen",
-      note: "Phiếu nhập mẫu tĩnh – Apestomen Volcanic Clay 80g",
-      status: "completed",
-      items: [
-        {
-          productId: null,
-          productCode: "APM-VC-80",
-          productName: "Apestomen Volcanic Clay 80g",
-          lotCode: "STATIC-APM-01",
-          costPrice: 190000,
-          quantity: 20,
-        },
-      ],
-      totalCost: 3800000, // 190.000 * 20
-      totalQty: 20,
-      createdAt: new Date("2024-11-05T11:00:00").getTime(),
-      updatedAt: new Date("2024-11-05T11:00:00").getTime(),
-      completedAt: new Date("2024-11-05T11:10:00").getTime(),
-      isStatic: true,
-    },
-  ];
 
   // ===== Helpers =====
   const $ = (s, ctx = document) => ctx.querySelector(s);
@@ -184,7 +30,6 @@
     const seq = String(Math.floor(Math.random() * 1000)).padStart(3, "0");
     return `PN-${y}${m}${day}-${seq}`;
   };
-
   function jget(k, d) {
     try {
       return JSON.parse(localStorage.getItem(k) || JSON.stringify(d));
@@ -207,24 +52,155 @@
     } catch {}
   };
 
+  // ===== Suppliers mẫu & đoán NCC theo tên sản phẩm =====
+  const SAMPLE_SUPPLIERS = [
+    "Davines",
+    "TIGI",
+    "Kevin Murphy",
+    "Butterfly Shadow",
+    "Luxurious",
+    "Apestomen",
+    "Hanz de Fuko",
+  ];
+  function guessSupplierFromName(name) {
+    const lower = String(name || "").toLowerCase();
+    for (const sup of SAMPLE_SUPPLIERS) {
+      if (lower.includes(sup.toLowerCase())) return sup;
+    }
+    return "Nhà cung cấp khác";
+  }
+
+  // ===== Tính tổng trên các dòng =====
+  function calcTotals(items) {
+    const totalCost = (items || []).reduce(
+      (s, it) => s + Number(it.costPrice || 0) * Number(it.quantity || 0),
+      0
+    );
+    const totalQty = (items || []).reduce(
+      (s, it) => s + Number(it.quantity || 0),
+      0
+    );
+    return { totalCost, totalQty };
+  }
+
+  // ===== Build bộ PHIẾU MẪU (không phụ thuộc localStorage) =====
+  function buildDefaultReceipts() {
+    const year = new Date().getFullYear();
+    const baseDate = new Date(year, 9, 28); // 28/10
+
+    const samples = [
+      {
+        code: "SP001",
+        name: "Gôm xịt tóc Davines Extra Strong Hairspray",
+        cost: 180000,
+        qty: 30,
+      },
+      {
+        code: "SP002",
+        name: "Gôm xịt tóc TIGI Bed Head Masterpiece",
+        cost: 170000,
+        qty: 20,
+      },
+      {
+        code: "SP003",
+        name: "Sáp vuốt tóc Kevin Murphy Free Hold",
+        cost: 280000,
+        qty: 15,
+      },
+      {
+        code: "SP004",
+        name: "Keo xịt tóc Butterfly Shadow Super Hard",
+        cost: 90000,
+        qty: 40,
+      },
+      {
+        code: "SP005",
+        name: "Sáp Luxurious Clay Wax",
+        cost: 120000,
+        qty: 25,
+      },
+      {
+        code: "SP006",
+        name: "Sáp Apestomen Nitro Wax",
+        cost: 110000,
+        qty: 18,
+      },
+      {
+        code: "SP007",
+        name: "Sáp Hanz de Fuko Claymation",
+        cost: 260000,
+        qty: 12,
+      },
+      {
+        code: "SP008",
+        name: "Sáp vuốt tóc Davines Strong Hold Cream",
+        cost: 230000,
+        qty: 14,
+      },
+    ];
+
+    const receipts = [];
+    for (let i = 0; i < samples.length; i++) {
+      const s = samples[i];
+
+      // cứ 3 phiếu thì +2 ngày (28/10, 30/10, 01/11,...)
+      const group = Math.floor(i / 3);
+      const d = new Date(baseDate);
+      d.setDate(baseDate.getDate() + group * 2);
+      const dateIso = d.toISOString().slice(0, 10);
+
+      const item = {
+        productId: undefined, // demo → không cộng tồn kho nữa
+        productCode: s.code,
+        productName: s.name,
+        lotCode: `SEED-${s.code}-${i + 1}`,
+        costPrice: s.cost,
+        quantity: s.qty,
+      };
+      const totals = calcTotals([item]);
+
+      receipts.push({
+        id: `PN_DEMO_${i + 1}`,
+        code: `PN-${dateIso.replace(/-/g, "")}-${String(i + 1).padStart(
+          3,
+          "0"
+        )}`,
+        date: dateIso,
+        supplier: guessSupplierFromName(s.name),
+        note: `Phiếu nhập mẫu cho ${s.name}`,
+        status: "completed",
+        items: [item],
+        totalCost: totals.totalCost,
+        totalQty: totals.totalQty,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        completedAt: Date.now(),
+      });
+    }
+    return receipts;
+  }
+
   // ===== Cache receipts =====
   let _RECEIPTS_CACHE = null;
-
   function receiptsRead() {
     if (!_RECEIPTS_CACHE) {
-      const stored = jget(RECEIPT_KEY, []);
-      const merged = STATIC_SAMPLE_RECEIPTS.concat(stored || []);
-      merged.sort((a, b) => new Date(b.date) - new Date(a.date));
-      _RECEIPTS_CACHE = merged;
+      let stored = jget(RECEIPT_KEY, []);
+      // Nếu localStorage chưa có gì → nạp bộ mẫu và lưu luôn
+      if (!stored || !stored.length) {
+        stored = buildDefaultReceipts();
+        jset(RECEIPT_KEY, stored);
+      }
+      _RECEIPTS_CACHE = stored.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
     }
     return _RECEIPTS_CACHE;
   }
-
-  // Lưu CHỈ phần phiếu động (không lưu phiếu tĩnh isStatic)
   function receiptsWrite(arr) {
-    const dynamic = (arr || []).filter((r) => !r || !r.isStatic);
-    jset(RECEIPT_KEY, dynamic);
-    _RECEIPTS_CACHE = null; // reset cache, lần sau đọc lại sẽ trộn với STATIC_SAMPLE_RECEIPTS
+    _RECEIPTS_CACHE = (arr || []).sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+    jset(RECEIPT_KEY, _RECEIPTS_CACHE);
     ping("receipts.bump");
   }
 
@@ -249,20 +225,7 @@
     ping("stock.bump");
   }
 
-  // ===== Totals =====
-  function calcTotals(items) {
-    const totalCost = (items || []).reduce(
-      (s, it) => s + Number(it.costPrice || 0) * Number(it.quantity || 0),
-      0
-    );
-    const totalQty = (items || []).reduce(
-      (s, it) => s + Number(it.quantity || 0),
-      0
-    );
-    return { totalCost, totalQty };
-  }
-
-  // ===== Normalize items =====
+  // ===== Chuẩn hóa items khi tạo / sửa phiếu thật =====
   function normalizeItems(items) {
     return (items || []).map((it) => {
       const p = getProductById(it.productId);
@@ -270,7 +233,7 @@
         productId: it.productId,
         productCode: it.productCode || p?.code || "",
         productName: it.productName || p?.name || "",
-        lotCode: (it.lotCode || "").trim() || `LOT-${Date.now()}`,
+        lotCode: it.lotCode || `LOT-${Date.now()}`,
         costPrice: Number(it.costPrice || 0),
         quantity: Number(it.quantity || 0),
       };
@@ -278,168 +241,7 @@
   }
 
   /* ============================================================
-   MIGRATION 1: xoá phiếu mẫu cũ (1 phiếu nhiều sản phẩm)
-   Điều kiện xoá:
-   - supplier === "Nhà cung cấp mẫu"
-   - status === "completed"
-   - items.length > 1
-   ============================================================ */
-  function removeOldSampleReceiptV1() {
-    const list = jget(RECEIPT_KEY, []);
-    if (!list.length) return;
-    const filtered = list.filter(
-      (r) =>
-        !(
-          r &&
-          r.supplier === "Nhà cung cấp mẫu" &&
-          r.status === "completed" &&
-          Array.isArray(r.items) &&
-          r.items.length > 1
-        )
-    );
-    if (filtered.length !== list.length) {
-      receiptsWrite(filtered);
-    }
-  }
-
-  /* ============================================================
-   MIGRATION 2: cập nhật supplier phiếu mẫu theo tên sản phẩm
-   - Nhận diện phiếu mẫu: note bắt đầu "Phiếu nhập mẫu cho sản phẩm"
-   - Lấy tên sản phẩm từ item.productName hoặc từ products
-   - supplier = detectSupplierByName(productName)
-   ============================================================ */
-  function migrateSampleSuppliersByProductName() {
-    const list = jget(RECEIPT_KEY, []);
-    if (!list.length) return;
-    let idx = 0;
-    let changed = false;
-
-    list.forEach((r) => {
-      if (
-        r &&
-        r.status === "completed" &&
-        typeof r.note === "string" &&
-        r.note.startsWith("Phiếu nhập mẫu cho sản phẩm") &&
-        Array.isArray(r.items) &&
-        r.items.length >= 1
-      ) {
-        const it = r.items[0];
-        const p = getProductById(it.productId);
-        const name = it.productName || p?.name || "";
-        const sup = detectSupplierByName(name, idx++);
-        if (sup && r.supplier !== sup) {
-          r.supplier = sup;
-          changed = true;
-        }
-      }
-    });
-
-    if (changed) {
-      receiptsWrite(list);
-    }
-  }
-
-  /* ============================================================
-   🔥 SEED PHIẾU NHẬP MẪU V2 – MỖI PHIẾU 1 SẢN PHẨM (động)
-   - Không đè dữ liệu thật
-   - Mục tiêu: ~8 phiếu mẫu (dựa trên admin.products)
-   - Chỉ chạy 1 lần theo key "admin.importSeeded.v2"
-   - LƯU Ý: Phiếu tĩnh ở trên KHÔNG phụ thuộc đoạn seed này
-   ============================================================ */
-  function seedReceiptsFromProductsOnceV2() {
-    const flag = "admin.importSeeded.v2";
-    if (localStorage.getItem(flag) === "1") return;
-
-    const receipts = jget(RECEIPT_KEY, []) || [];
-    const prods = listProducts();
-    if (!prods.length) {
-      localStorage.setItem(flag, "1");
-      return;
-    }
-
-    // Nhận diện phiếu mẫu v2
-    const sampleReceipts = receipts.filter(
-      (r) =>
-        r &&
-        r.status === "completed" &&
-        typeof r.note === "string" &&
-        r.note.startsWith("Phiếu nhập mẫu cho sản phẩm")
-    );
-
-    const currentSampleCount = sampleReceipts.length;
-    const targetSample = Math.min(8, prods.length);
-
-    if (currentSampleCount >= targetSample) {
-      localStorage.setItem(flag, "1");
-      receiptsWrite(receipts);
-      return;
-    }
-
-    // set productId đã dùng
-    const usedProductIds = new Set();
-    sampleReceipts.forEach((r) => {
-      const it = (r.items || [])[0];
-      if (it && it.productId != null) {
-        usedProductIds.add(String(it.productId));
-      }
-    });
-
-    const year = new Date().getFullYear();
-    const baseDate = new Date(year, 9, 28); // 28/10
-    let newSampleCount = currentSampleCount;
-    const newReceipts = [];
-
-    for (let i = 0; i < prods.length; i++) {
-      if (newSampleCount >= targetSample) break;
-      const p = prods[i];
-      if (usedProductIds.has(String(p.id))) continue;
-
-      const group = Math.floor(newSampleCount / 3); // cứ 3 phiếu cách 2 ngày
-      const dateObj = new Date(baseDate);
-      dateObj.setDate(baseDate.getDate() + group * 2);
-      const dateIso = dateObj.toISOString().slice(0, 10);
-
-      const item = {
-        productId: p.id,
-        productCode: p.code,
-        productName: p.name,
-        lotCode: `SEED-${p.code}-${newSampleCount + 1}`,
-        costPrice: Number(p.cost || p.price || 0),
-        quantity: Math.max(1, Number(p.qty) || 5),
-      };
-      const totals = calcTotals([item]);
-
-      const supplierName = detectSupplierByName(
-        p.name || p.supplier || "",
-        newSampleCount
-      );
-
-      newReceipts.push({
-        id: genId("PN"),
-        code: nextCode(),
-        date: dateIso,
-        supplier: supplierName,
-        note: `Phiếu nhập mẫu cho sản phẩm ${p.name}`,
-        status: "completed",
-        items: [item],
-        totalCost: totals.totalCost,
-        totalQty: totals.totalQty,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        completedAt: Date.now(),
-      });
-
-      newSampleCount++;
-      usedProductIds.add(String(p.id));
-    }
-
-    const merged = receipts.concat(newReceipts);
-    receiptsWrite(merged);
-    localStorage.setItem(flag, "1");
-  }
-
-  /* ============================================================
-     CRUD Receipts
+     CRUD Receipts (dữ liệu thật của Admin)
      ============================================================ */
   function listReceipts() {
     return receiptsRead();
@@ -453,7 +255,7 @@
 
   function createReceipt({ date, supplier, note, items }) {
     const all = listReceipts();
-    const norm = normalizeItems(items || []);
+    const norm = normalizeItems(items);
     const t = calcTotals(norm);
 
     const rec = {
@@ -504,7 +306,7 @@
     const rec = all[i];
     if (rec.status !== "draft") throw "Phiếu đã hoàn thành";
 
-    // cộng tồn thật
+    // cộng tồn kho thật cho các phiếu do Admin tạo (demo thì productId undefined nên bỏ qua)
     let prods = listProducts();
     rec.items.forEach((it) => {
       const idx = prods.findIndex((p) => String(p.id) === String(it.productId));
@@ -523,7 +325,7 @@
   }
 
   /* ============================================================
-     UI
+     UI CODE
      ============================================================ */
 
   const $tbody = $("#rcp-body");
@@ -604,15 +406,12 @@
       if (to && d > to) return false;
 
       if (q) {
-        const hay = `${r.code} ${r.supplier || ""} ${
-          r.note || ""
-        }`.toLowerCase();
+        const hay = `${r.code} ${r.supplier} ${r.note}`.toLowerCase();
         const matchItems = (r.items || []).some((it) =>
           `${it.productCode} ${it.productName}`.toLowerCase().includes(q)
         );
         if (!hay.includes(q) && !matchItems) return false;
       }
-
       return true;
     });
 
@@ -632,24 +431,24 @@
 
         return `
         <tr>
-          <td><b>${r.code}</b>${r.isStatic ? ' <span style="font-size:11px;color:#999">(mẫu)</span>' : ""}</td>
-          <td>${r.date}</td>
-          <td>${preview}${more}</td>
-          <td>${esc(r.supplier || "")}</td>
+          <td><b>${esc(r.code)}</b></td>
+          <td>${esc(r.date)}</td>
+          <td>${esc(preview)}${more}</td>
+          <td>${esc(r.supplier)}</td>
           <td class="num">${money(r.totalQty)}</td>
           <td class="num">${money(r.totalCost)}</td>
-          <td>${r.status}</td>
+          <td>${esc(r.status)}</td>
           <td>
             <button data-act="view" data-id="${
               r.id
             }" class="btn sm">Xem</button>
             ${
-              !r.isStatic && r.status === "draft"
+              r.status === "draft"
                 ? `<button data-act="edit" data-id="${r.id}" class="btn sm">Sửa</button>`
                 : ""
             }
             ${
-              !r.isStatic && r.status === "draft"
+              r.status === "draft"
                 ? `<button data-act="complete" data-id="${r.id}" class="btn sm primary">Hoàn thành</button>`
                 : ""
             }
@@ -683,22 +482,22 @@
     $meta.innerHTML = cur
       ? `Mã phiếu: <b>${esc(cur.code)}</b> – Trạng thái: <b>${esc(
           cur.status
-        )}</b>${cur.isStatic ? " – <i>Phiếu mẫu tĩnh</i>" : ""}`
+        )}</b>`
       : "";
 
-    const editable =
-      !readonly && (!cur || (cur.status === "draft" && !cur.isStatic));
+    const editable = !readonly && (!cur || cur.status === "draft");
     $btnSave.style.display = editable ? "inline-flex" : "none";
     $btnComplete.style.display =
-      cur && cur.status === "draft" && !cur.isStatic ? "inline-flex" : "none";
+      cur && cur.status === "draft" ? "inline-flex" : "none";
 
     renderLines();
     $modal.classList.add("show");
     $modal.setAttribute("aria-hidden", "false");
   }
 
-  /* EVENTS */
-
+  /* ============================================================
+     EVENTS
+     ============================================================ */
   $btnClose?.addEventListener("click", () => {
     $modal.classList.remove("show");
     $modal.setAttribute("aria-hidden", "true");
@@ -710,6 +509,7 @@
     }
   });
 
+  // thêm dòng
   $btnAddLine?.addEventListener("click", () => {
     const kw = ($sprod.value || "").trim().toLowerCase();
     const found = listProducts().filter((p) =>
@@ -720,10 +520,9 @@
     const p = found[0];
     const lot = prompt("Mã lô:", `LOT-${Date.now()}`);
     if (lot === null) return;
-    const cost = Number(prompt("Giá nhập:", p.cost || p.price || 0));
-    const qty = Number(prompt("Số lượng:", 1));
-
-    if (!qty || qty <= 0) return;
+    const cost = Number(prompt("Giá nhập:", p.cost || p.price || 0) || 0);
+    const qty = Number(prompt("Số lượng:", 1) || 0);
+    if (!qty) return;
 
     STATE.items.push({
       productId: p.id,
@@ -737,20 +536,19 @@
     renderLines();
   });
 
+  // sửa / xóa dòng
   $lines?.addEventListener("input", (e) => {
     const tr = e.target.closest("tr");
     if (!tr) return;
     const idx = Number(tr.dataset.idx);
     const f = e.target.dataset.f;
-    const v = e.target.value;
 
-    if (f === "cost") STATE.items[idx].costPrice = Number(v || 0);
-    if (f === "qty") STATE.items[idx].quantity = Number(v || 0);
-    if (f === "lot") STATE.items[idx].lotCode = v;
+    if (f === "cost") STATE.items[idx].costPrice = Number(e.target.value || 0);
+    if (f === "qty") STATE.items[idx].quantity = Number(e.target.value || 0);
+    if (f === "lot") STATE.items[idx].lotCode = e.target.value;
 
     renderLines();
   });
-
   $lines?.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-act='rm']");
     if (!btn) return;
@@ -760,6 +558,7 @@
     renderLines();
   });
 
+  // lưu draft
   $btnSave?.addEventListener("click", () => {
     const data = {
       date: $date.value || today(),
@@ -775,7 +574,7 @@
         const rec = createReceipt(data);
         STATE.id = rec.id;
       }
-      alert("Đã lưu phiếu");
+      alert("Đã lưu");
       $modal.classList.remove("show");
       $modal.setAttribute("aria-hidden", "true");
       reload();
@@ -784,12 +583,13 @@
     }
   });
 
+  // hoàn thành phiếu
   $btnComplete?.addEventListener("click", () => {
     if (!STATE.id) return alert("Hãy lưu phiếu trước");
 
     if (
       !confirm(
-        "Hoàn thành phiếu? Điều này sẽ cộng tồn kho thật và không sửa phiếu được nữa."
+        "Hoàn thành phiếu? Sau khi hoàn thành sẽ cộng tồn kho và không sửa được."
       )
     )
       return;
@@ -805,40 +605,42 @@
     }
   });
 
+  // toolbar
   $btnNew?.addEventListener("click", () => openForm(null, false));
   $btnFilter?.addEventListener("click", reload);
 
   $tbody?.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-act]");
     if (!btn) return;
-
     const id = btn.dataset.id;
     const act = btn.dataset.act;
 
     if (act === "view") openForm(id, true);
     if (act === "edit") openForm(id, false);
     if (act === "complete") {
-      if (
-        !confirm(
-          "Hoàn thành phiếu? Điều này sẽ cộng tồn kho thật và không sửa phiếu được nữa."
-        )
-      )
-        return;
-      completeReceipt(id);
-      reload();
+      const rec = getReceiptById(id);
+      if (!rec) return alert("Không tìm thấy phiếu");
+      if (rec.status !== "draft") return alert("Phiếu đã hoàn thành");
+      if (!confirm(`Hoàn thành phiếu ${rec.code}?`)) return;
+      try {
+        completeReceipt(id);
+        alert("Đã hoàn thành");
+        reload();
+      } catch (e) {
+        alert(e);
+      }
     }
   });
 
-  /* INIT */
+  /* ============================================================
+     INIT
+     ============================================================ */
   (function init() {
-    removeOldSampleReceiptV1(); // dọn phiếu mẫu cũ
-    seedReceiptsFromProductsOnceV2(); // seed thêm phiếu mẫu động nếu thiếu
-    migrateSampleSuppliersByProductName(); // sửa lại NCC theo tên SP
     $date.value = today();
     reload();
   })();
 
-  /* Storage sync giữa các tab */
+  // đồng bộ khi tab khác thay đổi
   window.addEventListener("storage", (e) => {
     const keys = [
       RECEIPT_KEY,
