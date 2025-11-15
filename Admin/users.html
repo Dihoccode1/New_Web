@@ -438,7 +438,6 @@
     </div>
 
     <!-- JS chung admin -->
-    <!-- JS chung admin -->
     <script src="./assets/js/main.js"></script>
 
     <script>
@@ -497,6 +496,80 @@
           // tách theo khoảng trắng, @, ., _, -
           const parts = t.split(/[\s@._-]+/).filter(Boolean);
           return parts.some((p) => p.startsWith(qNorm));
+        }
+
+        /* ==================
+           SEED KHÁCH HÀNG MẪU
+           ================== */
+        function seedDefaultUsersIfNeeded() {
+          const existing = loadJSON(LS_USERS, []);
+          if (existing && existing.length) return; // đã có data thật thì thôi
+
+          const now = new Date().toISOString();
+
+          const seedMeta = [
+            {
+              name: "Nguyễn Văn A",
+              email: "nguyenvana@example.com",
+              phone: "0901234567",
+              address: "12 Nguyễn Huệ, Q.1, TP.HCM",
+            },
+            {
+              name: "Trần Thị B",
+              email: "tranthib@example.com",
+              phone: "0912345678",
+              address: "45 Lê Lợi, Q.1, TP.HCM",
+            },
+            {
+              name: "Lê Văn C",
+              email: "levanc@example.com",
+              phone: "0923456789",
+              address: "99 Hai Bà Trưng, Q.3, TP.HCM",
+            },
+            {
+              name: "Phạm Minh D",
+              email: "phamminhd@example.com",
+              phone: "0934567890",
+              address: "20 Phan Xích Long, Phú Nhuận",
+            },
+          ];
+
+          // sv_users_v1
+          const svUsers = seedMeta.map((m) => ({
+            name: m.name,
+            email: m.email.toLowerCase(),
+            passHash: fnv1a("123456"), // mật khẩu mặc định
+            createdAt: now,
+            status: "active",
+          }));
+          saveJSON(LS_USERS, svUsers);
+
+          // sv_profiles_v1
+          const profiles = {};
+          seedMeta.forEach((m) => {
+            const key = m.email.toLowerCase();
+            profiles[key] = {
+              fullname: m.name,
+              phone: m.phone,
+              address: m.address,
+            };
+          });
+          saveJSON(LS_PROFILES, profiles);
+
+          // bs_users
+          const bsUsers = seedMeta.map((m, idx) => ({
+            id: idx + 1,
+            status: "active",
+            fullName: m.name,
+            username: m.email.toLowerCase(),
+            password: "123456",
+            email: m.email.toLowerCase(),
+            phone: m.phone,
+            address: m.address,
+            role: "member",
+            createdAt: now,
+          }));
+          saveJSON(BS_USERS, bsUsers);
         }
 
         // Gộp dữ liệu từ nhiều nguồn
@@ -891,7 +964,8 @@
           } catch {}
         })();
 
-        // Render lần đầu
+        // ✅ Seed khách hàng mẫu trước, rồi mới render
+        seedDefaultUsersIfNeeded();
         render();
 
         // Nghe thay đổi localStorage từ TAB KHÁC -> render lại (không reload trang)
