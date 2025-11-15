@@ -151,7 +151,7 @@
     <div class="header-main">
       <div class="header-left">
         <!-- Chặn autofill & gõ dấu ok -->
-        <form action="/search" method="get" class="search-bar" autocomplete="off">
+        <form action="" method="get" class="search-bar" autocomplete="off">
           <input type="text" name="query" placeholder="Tìm kiếm"
                  autocomplete="off" autocapitalize="off" autocorrect="off"
                  spellcheck="false" inputmode="search" />
@@ -199,20 +199,21 @@
   var form = d.querySelector('.search-bar');
   if (!form) return;
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
 
-    var input = form.querySelector('input[name="query"], input[name="q"]');
-    var q = (input && input.value || '').trim().replace(/\s+/g, ' ');
-    var raw = getProductsURL();
+  var input = form.querySelector('input[name="query"], input[name="q"]');
+  var q = (input && input.value || '').trim().replace(/\s+/g, ' ');
 
-    // Dùng URL để không bị nhân đôi ?q= và giữ các param khác nếu có
-    var url = new URL(raw, w.location.origin);
-    if (q) url.searchParams.set('q', q); else url.searchParams.delete('q');
+  var raw = getProductsURL();       
+  var base = raw.split('?')[0].split('#')[0]; 
 
-    // Điều hướng sang trang sản phẩm với ?q=
-    w.location.href = url.pathname + (url.search ? url.search : '');
-  }, { passive: false });
+  var href = q ? base + '?q=' + encodeURIComponent(q) : base;
+
+  // GIỮ LINK TƯƠNG ĐỐI
+  w.location.href = href;
+}, { passive: false });
+
 })(window, document);
 </script>
 <script>
@@ -261,7 +262,7 @@
         <div class="col-xs-12">
           <ul class="breadcrumb">
             <li class="home">
-              <a href="/"><span>Trang chủ</span></a>
+              <a href="./index.html"><span>Trang chủ</span></a>
               <span class="mr_lr">&nbsp;<i class="fa fa-angle-right"></i>&nbsp;</span>
             </li>
             <li><strong><span>Tin tức</span></strong></li>

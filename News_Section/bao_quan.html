@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sơmi denim cho chàng khoe cá tính</title>
+    <title>Cách bảo quản sáp vuốt tóc để dùng lâu và hiệu quả</title>
 
     <link
       rel="stylesheet"
@@ -348,7 +348,7 @@
         <div class="header-main">
           <div class="header-left">
             <form
-              action="/search"
+              action="../sanpham/sanpham.html"
               method="get"
               class="search-bar"
               autocomplete="off"
@@ -436,48 +436,40 @@
       })(window, document);
     </script>
     <script>
-      (function (w, d) {
-        // gọi sau khi auth sẵn sàng
-        function makeWelcomeClickable() {
-          // ưu tiên phần tử của header mới
-          var el = d.querySelector(".welcome-user");
-          if (el) {
-            // đã là <a>, đảm bảo đúng href
-            el.setAttribute("href", "../account/profile.html");
-            return;
-          }
+  (function (w, d) {
+    function makeWelcomeClickable() {
+      var el = d.querySelector(".welcome-user");
+      if (el) {
+        el.setAttribute("href", "../account/profile.html");
+        return;
+      }
 
-          // các trường hợp site cũ: #welcomeName, [data-welcome-name], .js-welcome-name
-          var target = d.querySelector(
-            "#welcomeName, [data-welcome-name], .js-welcome-name"
-          );
-          if (!target) return;
+      var target = d.querySelector(
+        "#welcomeName, [data-welcome-name], .js-welcome-name"
+      );
+      if (!target) return;
 
-          // nếu chưa phải <a>, bọc lại thành <a>
-          if (target.tagName !== "A") {
-            var a = d.createElement("a");
-            a.href = "../account/profile.html";
-            a.className = "welcome-link";
-            // chuyển toàn bộ nội dung vào <a>
-            while (target.firstChild) a.appendChild(target.firstChild);
-            target.appendChild(a);
-          } else {
-            // đã là <a> thì gán href đúng
-            target.setAttribute("href", "../account/profile.html");
-          }
-        }
+      if (target.tagName !== "A") {
+        var a = d.createElement("a");
+        a.href = "../account/profile.html";
+        a.className = "welcome-link";
+        while (target.firstChild) a.appendChild(target.firstChild);
+        target.appendChild(a);
+      } else {
+        target.setAttribute("href", "../account/profile.html");
+      }
+    }
 
-        // chạy khi auth ready, và dự phòng nếu auth đã sẵn sàng
-        d.addEventListener("auth:ready", makeWelcomeClickable);
-        if (w.AUTH && w.AUTH.ready) makeWelcomeClickable();
-      })();
-    </script>
+    d.addEventListener("auth:ready", makeWelcomeClickable);
+    if (w.AUTH && w.AUTH.ready) makeWelcomeClickable();
+  })(window, document);  
+</script>
 
     <section class="bread-crumb">
       <div class="container">
         <ul class="breadcrumb">
           <li class="home">
-            <a href="/"><span>Trang chủ</span></a>
+            <a href="../index.html"><span>Trang chủ</span></a>
             <span class="mr_lr"
               >&nbsp;<i class="fa fa-angle-right"></i>&nbsp;</span
             >
@@ -650,7 +642,7 @@
                 <a href="../News_Section/goi_y.html">Bài viết trước</a>
               </div>
               <div>
-                <a href="../News_Section/bao_quan.html">Bài viết sau</a>
+                <a href="../News_Section/phan_biet.html">Bài viết sau</a>
                 →
               </div>
             </div>
@@ -674,7 +666,7 @@
 
             <div class="comment">
               <div class="avatar">
-                <img src="../assets/images/cm2.png " alt="avatar" />
+                <img src="../assets/images/cm2.png" alt="avatar" />
               </div>
               <div class="c-body">
                 <div class="c-meta">

@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lịch sử Mua hàng</title>
+
+    <!-- Vendor CSS -->
     <link
       rel="stylesheet"
       href="./fontawesome-free-6.7.2-web/css/all.min.css"
-      integrity="..."
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
     <link
       rel="stylesheet"
       href="./bootstrap-4.6.2-dist/css/bootstrap.css"
-      integrity="..."
       crossorigin="anonymous"
     />
+
+    <!-- Site CSS -->
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/base.css" />
+
     <style>
       .title {
         margin-top: 30px;
@@ -29,6 +32,7 @@
   </head>
 
   <body>
+    <!-- TOPBAR -->
     <header class="header">
       <div class="topbar">
         <div class="container">
@@ -37,13 +41,14 @@
       </div>
     </header>
 
+    <!-- MID HEADER -->
     <header class="mid-header">
       <div class="container">
         <div class="header-main">
           <div class="header-left">
-            <!-- Chặn autofill & gõ dấu ok -->
+            <!-- Search: dùng JS đẩy sang trang Sản phẩm -->
             <form
-              action="/search"
+              action="./sanpham/sanpham.html"
               method="get"
               class="search-bar"
               autocomplete="off"
@@ -80,6 +85,7 @@
       </div>
     </header>
 
+    <!-- MAIN NAV -->
     <nav class="main-nav">
       <ul>
         <li><a href="./index.html">TRANG CHỦ</a></li>
@@ -92,12 +98,13 @@
       </ul>
     </nav>
 
+    <!-- JS: search header → sanpham?q=... -->
     <script>
       (function (w, d) {
         function getProductsURL() {
           var a =
             d.querySelector("nav.main-nav a.js-products-url") ||
-            d.querySelector('nav.main-nav a[href*="/sanpham"]');
+            d.querySelector('nav.main-nav a[href*="sanpham"]');
           return a && a.getAttribute("href")
             ? a.getAttribute("href")
             : "./sanpham/sanpham.html";
@@ -120,12 +127,12 @@
             else url.searchParams.delete("q");
             w.location.href = url.pathname + (url.search ? url.search : "");
           },
-          {
-            passive: false,
-          }
+          { passive: false }
         );
       })(window, document);
     </script>
+
+    <!-- JS: welcome name → profile -->
     <script>
       (function (w, d) {
         function makeWelcomeClickable() {
@@ -150,8 +157,10 @@
         }
         d.addEventListener("auth:ready", makeWelcomeClickable);
         if (w.AUTH && w.AUTH.ready) makeWelcomeClickable();
-      })();
+      })(window, document);
     </script>
+
+    <!-- PAGE CONTENT -->
     <div class="container mt-5">
       <div class="title">
         <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Mua hàng của bạn
@@ -178,16 +187,19 @@
       </table>
     </div>
 
+    <!-- JS: LIB + CORE + CART (đặt TRONG <body>) -->
     <script src="./assets/js/jquery-3.6.0.min.js"></script>
+
+    <script src="./assets/js/auth.js"></script>
+    <script src="./assets/js/auth.security.enforcer.js"></script>
+    <script src="./assets/js/auth.localstorage.bridge.js"></script>
+    <script src="./assets/js/auth.reactive.guard.v2.js"></script>
+
+    <script src="./assets/js/store.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/products.seed.js"></script>
+    <script src="./assets/js/products.app.js"></script>
+
     <script src="./assets/js/cart.js"></script>
   </body>
 </html>
-<script src="./assets/js/auth.js"></script>
-<script src="./assets/js/auth.security.enforcer.js"></script>
-<script src="./assets/js/auth.localstorage.bridge.js"></script>
-<script src="./assets/js/auth.reactive.guard.v2.js"></script>
-<!-- Các file còn lại -->
-<script src="./assets/js/store.js"></script>
-<script src="./assets/js/ui.js"></script>
-<script src="./assets/js/products.seed.js"></script>
-<script src="./assets/js/products.app.js"></script>

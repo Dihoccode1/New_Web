@@ -129,7 +129,7 @@
     <div class="header-main">
       <div class="header-left">
         <!-- Chặn autofill & gõ dấu ok -->
-        <form action="/search" method="get" class="search-bar" autocomplete="off">
+        <form action="../sanpham/sanpham.html" method="get" class="search-bar" autocomplete="off">
           <input type="text" name="query" placeholder="Tìm kiếm"
                  autocomplete="off" autocapitalize="off" autocorrect="off"
                  spellcheck="false" inputmode="search" />
@@ -213,7 +213,7 @@
     // nếu chưa phải <a>, bọc lại thành <a>
     if (target.tagName !== 'A') {
       var a = d.createElement('a');
-      a.href = '/account/profile.html';
+      a.href = '../account/profile.html';
       a.className = 'welcome-link';
       while (target.firstChild) a.appendChild(target.firstChild);
       target.appendChild(a);
@@ -232,7 +232,7 @@
   <div class="container">
     <ul class="breadcrumb">
       <li class="home">
-        <a href="/"><span>Trang chủ</span></a>
+        <a href="../index.html"><span>Trang chủ</span></a>
         <span class="mr_lr">&nbsp;<i class="fa fa-angle-right"></i>&nbsp;</span>
       </li>
       <li>

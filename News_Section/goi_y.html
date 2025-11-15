@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8"/>
@@ -11,7 +12,7 @@
   <link rel="stylesheet" href="../assets/css/normalize.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/base.css">
-  <link rel="stylesheet" href="../News%20Section/style.css"><!-- CSS sidebar (đang có khoảng trắng) -->
+  <link rel="stylesheet" href="../News_Section/style.css">
 
   <style>
     :root{ --text:#222; --muted:#777; --line:#e6e6e6; --black:#000; }
@@ -114,6 +115,7 @@
 }
   </style>
 </head>
+<body>
 <header class="header">
   <div class="topbar">
     <div class="container">
@@ -127,7 +129,7 @@
     <div class="header-main">
       <div class="header-left">
         <!-- Chặn autofill & gõ dấu ok -->
-        <form action="/search" method="get" class="search-bar" autocomplete="off">
+        <form action="../sanpham/sanpham.html" method="get" class="search-bar" autocomplete="off">
           <input type="text" name="query" placeholder="Tìm kiếm"
                  autocomplete="off" autocapitalize="off" autocorrect="off"
                  spellcheck="false" inputmode="search" />
@@ -168,7 +170,7 @@
   <div class="container">
     <ul class="breadcrumb">
       <li class="home">
-        <a href="/"><span>Trang chủ</span></a>
+        <a href="../index.html"><span>Trang chủ</span></a>
         <span class="mr_lr">&nbsp;<i class="fa fa-angle-right"></i>&nbsp;</span>
       </li>
       <li>
@@ -433,7 +435,7 @@
               <li><a href="../index.html" title="Trang chủ">Trang chủ</a></li>
               <li><a href="../gioithieu.html" title="Giới thiệu">Giới thiệu</a></li>
               <li><a href="../sanpham/sanpham.html" title="Sản phẩm">Sản phẩm</a></li>
-              <li><a href="../tin-tuc" title="Tin tức">Tin tức</a></li>
+              <li><a href="../tintuc.html" title="Tin tức">Tin tức</a></li>
               <li><a href="../lienhe.html" title="Liên hệ">Liên hệ</a></li>
             </ul>
           </nav>
