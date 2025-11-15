@@ -6,7 +6,7 @@
     USER: "sv_orders_v1", // { email: [orders...] } hoặc mảng
     FLAT: "sv_orders_flat", // mảng đơn phẳng (bridge)
     PING1: "orders.bump", // chuông thay đổi cho tab admin
-    PING2: "sv_orders_ping", // chuông từ phía user (nếu có)
+    PING2: "sv_orders_ping", // chuông phía user (nếu có)
     PROD: "admin.products", // mảng sản phẩm {id, code, qty, ...}
     STOCK: "admin.stock", // lịch sử giao dịch kho
     CAT_BMP: "catalog.bump",
@@ -61,6 +61,154 @@
   const canConfirm = (s) => s === "new";
   const canDeliver = (s) => s === "confirmed";
   const canCancel = (s) => s === "new" || s === "confirmed";
+
+  /* ================== 5 ĐƠN TĨNH (DEMO) – luôn merge vào list ================== */
+  const STATIC_ORDERS = [
+    {
+      id: "OD_STATIC_001",
+      code: "OD-20241028-001",
+      created_at: "2024-10-28T09:15:00+07:00",
+      status: "new",
+      note: "Khách yêu cầu giao trong giờ hành chính.",
+      email: "khach1@example.com",
+      shipping: {
+        fullname: "Nguyễn Văn A",
+        phone: "0900000001",
+        address: "12 Lê Lợi",
+        ward: "Phường Bến Nghé",
+        district: "Quận 1",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P1",
+          code: "SP001",
+          name: "Sáp vuốt tóc demo 1",
+          price: 250000,
+          qty: 1,
+        },
+        {
+          id: "P2",
+          code: "SP002",
+          name: "Gôm xịt tóc demo",
+          price: 180000,
+          qty: 1,
+        },
+      ],
+      total: 430000,
+      inventoryCommitted: false,
+    },
+    {
+      id: "OD_STATIC_002",
+      code: "OD-20241029-002",
+      created_at: "2024-10-29T14:20:00+07:00",
+      status: "new",
+      note: "",
+      email: "khach2@example.com",
+      shipping: {
+        fullname: "Trần Thị B",
+        phone: "0900000002",
+        address: "45 Nguyễn Huệ",
+        ward: "Phường Bến Nghé",
+        district: "Quận 1",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P3",
+          code: "SP003",
+          name: "Bột tạo phồng demo",
+          price: 220000,
+          qty: 2,
+        },
+      ],
+      total: 440000,
+      inventoryCommitted: false,
+    },
+    {
+      id: "OD_STATIC_003",
+      code: "OD-20241101-003",
+      created_at: "2024-11-01T10:05:00+07:00",
+      status: "confirmed",
+      note: "Đã gọi xác nhận với khách.",
+      email: "khach3@example.com",
+      shipping: {
+        fullname: "Lê Quốc C",
+        phone: "0900000003",
+        address: "23 Cách Mạng Tháng 8",
+        ward: "Phường 11",
+        district: "Quận 3",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P1",
+          code: "SP001",
+          name: "Sáp vuốt tóc demo 1",
+          price: 250000,
+          qty: 1,
+        },
+      ],
+      total: 250000,
+      inventoryCommitted: false,
+    },
+    {
+      id: "OD_STATIC_004",
+      code: "OD-20241102-004",
+      created_at: "2024-11-02T16:30:00+07:00",
+      status: "delivered",
+      note: "Khách thanh toán tiền mặt.",
+      email: "khach4@example.com",
+      shipping: {
+        fullname: "Phạm Mỹ D",
+        phone: "0900000004",
+        address: "89 Trường Chinh",
+        ward: "Phường Tây Thạnh",
+        district: "Tân Phú",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P2",
+          code: "SP002",
+          name: "Gôm xịt tóc demo",
+          price: 180000,
+          qty: 2,
+        },
+      ],
+      total: 360000,
+      inventoryCommitted: true,
+      deliveredAt: "2024-11-02T18:00:00+07:00",
+    },
+    {
+      id: "OD_STATIC_005",
+      code: "OD-20241103-005",
+      created_at: "2024-11-03T11:45:00+07:00",
+      status: "canceled",
+      note: "Khách yêu cầu huỷ đơn.",
+      email: "khach5@example.com",
+      shipping: {
+        fullname: "Đỗ Văn E",
+        phone: "0900000005",
+        address: "56 Phan Đăng Lưu",
+        ward: "Phường 5",
+        district: "Phú Nhuận",
+        city: "TP. Hồ Chí Minh",
+      },
+      items: [
+        {
+          id: "P4",
+          code: "SP004",
+          name: "Sáp vuốt tóc demo 2",
+          price: 270000,
+          qty: 1,
+        },
+      ],
+      total: 270000,
+      inventoryCommitted: false,
+      canceledAt: "2024-11-03T12:10:00+07:00",
+    },
+  ];
 
   /* ================== Chuẩn hoá đơn từ nhiều schema ================== */
   function normalize(list) {
@@ -174,7 +322,7 @@
     return flat;
   }
 
-  /* ================== Hợp nhất admin + flat ================== */
+  /* ================== Hợp nhất admin + flat + STATIC ================== */
   function loadAdminOrdersMerged() {
     let adminList = LS.get(KEYS.ADMIN, []);
     const userFlat = LS.get(KEYS.FLAT, []) ?? [];
@@ -205,6 +353,14 @@
         });
       } else {
         map.set(id, norm);
+      }
+    }
+
+    // merge thêm 5 đơn tĩnh (demo)
+    for (const s of STATIC_ORDERS) {
+      const id = String(s.id);
+      if (!map.has(id)) {
+        map.set(id, s);
       }
     }
 
@@ -520,12 +676,8 @@
   }
 
   function render() {
-    // ❗ Nếu không có dữ liệu trong localStorage → giữ nguyên HTML mẫu trong <tbody>, KHÔNG đụng vào
-    if (!state.list || !state.list.length) {
-      return;
-    }
-
     applyFilters();
+
     if (!state.filtered.length) {
       tb.innerHTML =
         '<tr><td colspan="8" style="text-align:center;color:#9aa3ad;padding:20px">Không có dữ liệu</td></tr>';
@@ -740,7 +892,7 @@
       flattenUserOrders();
     }
 
-    // Không auto lọc 7 ngày, để trống => show hết
+    // Không auto lọc 7 ngày, để trống → show hết
     if (fromInput) fromInput.value = "";
     if (toInput) toInput.value = "";
 
