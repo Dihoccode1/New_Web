@@ -128,9 +128,9 @@ window.SV_PRODUCT_SEED = [
     category: "hair_spray",
     price: 690000,
     image:
-      "../../assets/images/product/Hair_spray/Kevin_Murphy_Session_Spray/1468319756-session-spray-1.webp",
+      "../../assets/images/product/Hair_spray/Kevin_Murphy_Session_Spray/kevin.webp",
     images: [
-      "../../assets/images/product/Hair_spray/Kevin_Murphy_Session_Spray/1468319756-session-spray-1.webp",
+      "../../assets/images/product/Hair_spray/Kevin_Murphy_Session_Spray/kevin.webp",
     ],
     badge: "",
     featured: true,

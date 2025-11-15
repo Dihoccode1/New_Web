@@ -8,13 +8,16 @@
       href="../fontawesome-free-6.7.2-web/css/all.min.css"
       integrity="..."
       crossorigin="anonymous"
-      referrerpolicy="no-referrer">
+      referrerpolicy="no-referrer"
+    />
 
     <!-- GUARD: chỉ cho admin -->
     <script>
       (function () {
         try {
-          const u = JSON.parse(sessionStorage.getItem("session.user") || "null");
+          const u = JSON.parse(
+            sessionStorage.getItem("session.user") || "null"
+          );
           if (!u || u.role !== "admin") location.replace("./login.html");
         } catch {
           location.replace("./login.html");
@@ -212,6 +215,13 @@
             </a>
           </li>
 
+          <li id="nav-pricing">
+            <a href="./pricing.html">
+              <span class="icon"><i class="fa-solid fa-dollar-sign"></i></span>
+              <span class="title">Quản lý giá bán</span>
+            </a>
+          </li>
+
           <li class="hovered" id="nav-imports">
             <a href="./imports.html">
               <span class="icon"><i class="fa-solid fa-box-open"></i></span>
@@ -234,35 +244,33 @@
           </li>
 
           <hr />
-<li class="welcome-admin-tile" style="margin: 8px 10px 6px">
-  <div
-    style="
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid #2a2f8a;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #1f235a;
-      font-weight: 700;
-    "
-  >
-    <i class="fa-solid fa-user-shield"></i>
-    <span>Chào mừng, Admin</span>
-  </div>
-</li>
+          <li class="welcome-admin-tile" style="margin: 8px 10px 6px">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                border: 1px solid #2a2f8a;
+                border-radius: 12px;
+                background: #ffffff;
+                color: #1f235a;
+                font-weight: 700;
+              "
+            >
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Chào mừng, Admin</span>
+            </div>
+          </li>
 
-
-<li>
-  <a href="#" id="btn-logout-side">
-    <span class="icon">
-      <i class="fa-solid fa-right-from-bracket"></i>
-    </span>
-    <span class="title">Đăng xuất</span>
-  </a>
-</li>
-
+          <li>
+            <a href="#" id="btn-logout-side">
+              <span class="icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
+              </span>
+              <span class="title">Đăng xuất</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -288,6 +296,7 @@
             <option value="draft">Draft</option>
             <option value="completed">Completed</option>
           </select>
+          <!-- cứ để type="date" cho browser hiển thị mm/dd/yyyy -->
           <input id="f_from" type="date" class="input" />
           <input id="f_to" type="date" class="input" />
           <button class="btn" id="btnFilter">Lọc</button>
@@ -410,7 +419,7 @@
     <!-- JS chung -->
     <script src="./assets/js/main.js"></script>
 
-    <!-- Ionicons (nếu bạn đang dùng bản local như này) -->
+    <!-- Ionicons nếu có -->
     <script type="module" src="./assets/js/ionicons.esm.js"></script>
     <script nomodule src="./assets/js/ionicons.js"></script>
 

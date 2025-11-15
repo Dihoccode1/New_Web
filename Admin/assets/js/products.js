@@ -149,16 +149,57 @@ function fillCategories() {
 fillCategories();
 
 // ==================
-// Tự tính giá bán
+// Tự tính giá bán & % lợi nhuận
 // ==================
-function recalcPrice() {
-  const cost = Number(document.getElementById("cost").value || 0);
-  const margin = Number(document.getElementById("margin").value || 0);
+
+// cost + margin → tính lại price
+function recalcPriceFromMargin() {
+  const costEl = document.getElementById("cost");
+  const marginEl = document.getElementById("margin");
+  const priceEl = document.getElementById("price");
+  if (!costEl || !marginEl || !priceEl) return;
+
+  const cost = Number(costEl.value || 0);
+  const margin = Number(marginEl.value || 0);
+
   const price = Math.round(cost * (1 + margin / 100));
-  document.getElementById("price").value = isFinite(price) ? price : 0;
+  priceEl.value = isFinite(price) ? price : 0;
 }
-document.getElementById("cost")?.addEventListener("input", recalcPrice);
-document.getElementById("margin")?.addEventListener("input", recalcPrice);
+
+// cost + price → tính lại margin
+function recalcMarginFromPrice() {
+  const costEl = document.getElementById("cost");
+  const marginEl = document.getElementById("margin");
+  const priceEl = document.getElementById("price");
+  if (!costEl || !marginEl || !priceEl) return;
+
+  const cost = Number(costEl.value || 0);
+  const price = Number(priceEl.value || 0);
+
+  if (cost <= 0) {
+    // không tính được %LN khi chưa có giá vốn
+    marginEl.value = 0;
+    return;
+  }
+
+  const m = Math.round((price / cost - 1) * 100);
+  marginEl.value = isFinite(m) ? m : 0;
+}
+
+// Khi đổi giá vốn → tính lại giá bán theo %LN hiện tại
+document
+  .getElementById("cost")
+  ?.addEventListener("input", recalcPriceFromMargin);
+
+// Khi đổi %LN → tính lại giá bán
+document
+  .getElementById("margin")
+  ?.addEventListener("input", recalcPriceFromMargin);
+
+// Khi đổi giá bán → tính lại %LN
+document
+  .getElementById("price")
+  ?.addEventListener("input", recalcMarginFromPrice);
 
 // ============================
 // Preview & bỏ hình (Base64)

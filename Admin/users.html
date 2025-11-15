@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Font Awesome (relative path) -->
-    <link rel="stylesheet" href="../fontawesome-free-6.7.2-web/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="../fontawesome-free-6.7.2-web/css/all.min.css"
+    />
 
     <!-- GUARD: chưa đăng nhập admin -> quay về ./login.html -->
     <script>
@@ -253,6 +256,13 @@
             </a>
           </li>
 
+          <li id="nav-pricing">
+            <a href="./pricing.html">
+              <span class="icon"><i class="fa-solid fa-dollar-sign"></i></span>
+              <span class="title">Quản lý giá bán</span>
+            </a>
+          </li>
+
           <li id="nav-imports">
             <a href="./imports.html">
               <span class="icon"><i class="fa-solid fa-box-open"></i></span>
@@ -428,7 +438,7 @@
     </div>
 
     <!-- JS chung admin -->
-        <!-- JS chung admin -->
+    <!-- JS chung admin -->
     <script src="./assets/js/main.js"></script>
 
     <script>
@@ -797,8 +807,7 @@
           const pass = uPassword.value.trim();
           const role = uRole.value;
 
-          if (!name || !email)
-            return toast("Vui lòng nhập Họ tên và Email.");
+          if (!name || !email) return toast("Vui lòng nhập Họ tên và Email.");
           if (pass && pass.length < 4)
             return toast("Mật khẩu tối thiểu 4 ký tự.");
 
@@ -825,8 +834,7 @@
           promptReset(email) {
             const newPass = prompt("Nhập mật khẩu mới cho " + email + ":");
             if (!newPass) return;
-            if (newPass.length < 4)
-              return toast("Mật khẩu tối thiểu 4 ký tự.");
+            if (newPass.length < 4) return toast("Mật khẩu tối thiểu 4 ký tự.");
             try {
               resetPassword(email, newPass);
               render();
@@ -895,6 +903,5 @@
         });
       })();
     </script>
-
   </body>
 </html>

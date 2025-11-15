@@ -3,14 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Font Awesome local -->
     <link
       rel="stylesheet"
       href="../fontawesome-free-6.7.2-web/css/all.min.css"
-      integrity="sha512-..."
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     />
-    <!-- Font Awesome -->
 
     <!-- GUARD -->
     <script>
@@ -26,8 +23,18 @@
       })();
     </script>
 
-    <title>Quản lý danh mục | Nobility 1800s Admin</title>
+    <title>Quản lý giá bán | Nobility 1800s Admin</title>
+
+    <!-- CSS admin chung -->
     <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <!-- Font Awesome CDN (fallback) -->
+    <link
+      rel="stylesheet"
+      href="../fontawesome-free-6.7.2-web/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <style>
       .page {
@@ -41,8 +48,8 @@
       }
       .page-header h1 {
         font-size: 30px;
-        color: #000;
         margin: 0;
+        color: #000;
       }
       .actions {
         display: flex;
@@ -68,10 +75,12 @@
       .input {
         border: 1px solid #e5e7eb;
         border-radius: 10px;
-        padding: 10px 12px;
+        padding: 8px 10px;
+        min-width: 160px;
         background: #fff;
-        min-width: 220px;
+        color: #111;
         outline: none;
+        font-size: 14px;
       }
       .toolbar {
         display: flex;
@@ -80,7 +89,6 @@
         margin: 12px 0;
         flex-wrap: wrap;
       }
-
       table {
         width: 100%;
         border-collapse: collapse;
@@ -95,88 +103,33 @@
         border-bottom: 1px solid #e5e7eb;
       }
       td {
-        padding: 12px;
+        padding: 10px 12px;
         border-bottom: 1px solid #f0f2f5;
         vertical-align: middle;
+        font-size: 14px;
       }
       tr:hover {
         background: #fafafa;
       }
-      .badge {
-        display: inline-block;
-        padding: 3px 8px;
-        border-radius: 999px;
-        font-size: 12px;
-        border: 1px solid #e5e7eb;
-        color: #6b7280;
-      }
-
-      /* Drawer */
-      .drawer-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.35);
-        display: none;
-        z-index: 998;
-      }
-      .drawer-backdrop.show {
-        display: block;
-      }
-      .drawer {
-        position: fixed;
-        top: 0;
-        right: 0;
-        height: 100dvh;
-        width: min(440px, 92vw);
-        background: #fff;
-        border-left: 1px solid #e5e7eb;
-        z-index: 999;
-        transform: translateX(100%);
-        transition: transform 0.25s ease;
-        display: flex;
-        flex-direction: column;
-        box-shadow: -24px 0 60px rgba(0, 0, 0, 0.08);
-      }
-      .drawer.open {
-        transform: translateX(0);
-      }
-      .drawer .cardHeader {
-        padding: 14px 16px;
-        border-bottom: 1px solid #eef2f7;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .drawer .drawer-body {
-        padding: 12px 14px;
-        overflow: auto;
-      }
-      .close-x {
-        appearance: none;
-        border: 1px solid #e5e7eb;
-        background: #fff;
-        border-radius: 10px;
-        padding: 8px 10px;
-        cursor: pointer;
+      .btn-action {
+        padding: 6px 10px;
+        border-radius: 8px;
         font-weight: 700;
+        text-decoration: none;
+        border: 1px solid #e5e7eb;
+        background: #fff;
       }
-      .form-col label.small {
-        font-size: 12px;
-        color: #6b7280;
-        margin: 10px 0 6px;
-        display: block;
+      .margin-input {
+        text-align: right;
       }
-      .help {
-        color: #6b7280;
-        font-size: 12px;
-        margin: 4px 0 10px;
+      .price-display {
+        font-weight: 700;
       }
     </style>
   </head>
 
   <body>
     <div class="container">
-      <!-- SIDEBAR -->
       <div class="navagation">
         <ul>
           <li>
@@ -200,7 +153,7 @@
             </a>
           </li>
 
-          <li class="hovered" id="nav-categories">
+          <li id="nav-categories">
             <a href="./categories.html">
               <span class="icon"><i class="fa-solid fa-layer-group"></i></span>
               <span class="title">Quản lý danh mục</span>
@@ -214,7 +167,8 @@
             </a>
           </li>
 
-          <li id="nav-pricing">
+          <!-- Màn quản lý giá bán -->
+          <li class="hovered" id="nav-pricing">
             <a href="./pricing.html">
               <span class="icon"><i class="fa-solid fa-dollar-sign"></i></span>
               <span class="title">Quản lý giá bán</span>
@@ -276,39 +230,52 @@
     </div>
 
     <div class="main">
+      <div class="topbar">
+        <div class="toggle">
+          <i class="fa-solid fa-bars"></i>
+        </div>
+        <!-- chỗ này nếu bạn có user info / search thì giữ nguyên như các trang khác -->
+      </div>
+
       <div class="page">
         <div class="page-header">
-          <h1>Quản lý danh mục</h1>
-          <div class="actions">
-            <input
-              id="q"
-              class="input"
-              type="text"
-              placeholder="Tìm theo tên / mô tả…"
-            />
-            <button class="btn primary" id="btn-new">+ Thêm danh mục</button>
-          </div>
+          <h1>Quản lý giá bán</h1>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <input
+            id="q"
+            class="input"
+            type="text"
+            placeholder="Tìm theo mã / tên sản phẩm..."
+          />
+          <select id="filter-cat" class="input" style="min-width: 200px">
+            <option value="">— Tất cả loại —</option>
+          </select>
         </div>
 
         <div class="details">
           <div class="recentOrders" style="flex: 2">
-            <div class="cardHeader">
-              <h2>Danh sách danh mục</h2>
-              <span id="cat-count" class="badge">0 danh mục</span>
-            </div>
-
+            <div class="cardHeader"><h2>Bảng giá sản phẩm</h2></div>
             <table>
               <thead>
                 <tr>
-                  <td>Tên danh mục</td>
-                  <td>Mô tả</td>
+                  <td>#</td>
+                  <td>Mã</td>
+                  <td>Tên</td>
+                  <td>Loại</td>
+                  <td>Giá vốn</td>
+                  <td>% Lợi nhuận</td>
+                  <td>Giá bán</td>
+                  <td>Trạng thái</td>
                   <td>Hành động</td>
                 </tr>
               </thead>
-              <tbody id="cat-body">
+              <tbody id="pricing-body">
                 <tr>
                   <td
-                    colspan="3"
+                    colspan="9"
                     style="text-align: center; color: #9aa3ad; padding: 20px"
                   >
                     Đang tải…
@@ -319,60 +286,16 @@
           </div>
         </div>
       </div>
-
-      <!-- Drawer: Form danh mục -->
-      <div id="drawer-backdrop" class="drawer-backdrop"></div>
-      <aside id="cat-drawer" class="drawer" aria-hidden="true">
-        <div class="cardHeader">
-          <h2 id="form-title" style="margin: 0">Thêm danh mục</h2>
-          <button type="button" class="close-x" id="btn-close-drawer">✕</button>
-        </div>
-        <div class="drawer-body form-col">
-          <form id="cat-form">
-            <input type="hidden" id="id" />
-
-            <label class="small">Tên danh mục</label>
-            <input
-              id="name"
-              class="input"
-              type="text"
-              required
-              placeholder="Ví dụ: Sáp vuốt tóc"
-            />
-
-            <label class="small">Mô tả</label>
-            <input
-              id="desc"
-              class="input"
-              type="text"
-              placeholder="Mô tả ngắn…"
-            />
-
-            <div class="help">
-              Mã danh mục (LOAIxxx) được sinh tự động. Trạng thái mặc định: đang
-              sử dụng.
-            </div>
-
-            <div
-              style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap"
-            >
-              <button class="btn primary" type="submit">Lưu</button>
-              <button class="btn" id="btn-cancel" type="button">Hủy</button>
-            </div>
-          </form>
-        </div>
-      </aside>
     </div>
 
     <!-- JS chung -->
     <script src="./assets/js/main.js"></script>
 
-    <!-- Logic danh mục -->
-    <script src="./assets/js/categories.js"></script>
+    <!-- Logic quản lý giá bán -->
+    <script src="./assets/js/pricing.js"></script>
 
-    <!-- Drawer handlers + Logout -->
     <script>
-      // logout
+      // Logout
       document
         .getElementById("btn-logout-side")
         ?.addEventListener("click", (e) => {
@@ -380,35 +303,6 @@
           sessionStorage.removeItem("session.user");
           location.href = "./login.html";
         });
-
-      // Drawer show/hide
-      const drawer = document.getElementById("cat-drawer");
-      const backdrop = document.getElementById("drawer-backdrop");
-      const openBtn = document.getElementById("btn-new");
-      const closeBtn = document.getElementById("btn-close-drawer");
-      const cancelBtn = document.getElementById("btn-cancel");
-
-      function openDrawer() {
-        drawer.classList.add("open");
-        backdrop.classList.add("show");
-        drawer.setAttribute("aria-hidden", "false");
-      }
-      function closeDrawer() {
-        drawer.classList.remove("open");
-        backdrop.classList.remove("show");
-        drawer.setAttribute("aria-hidden", "true");
-      }
-
-      openBtn?.addEventListener("click", openDrawer);
-      closeBtn?.addEventListener("click", closeDrawer);
-      cancelBtn?.addEventListener("click", closeDrawer);
-      backdrop?.addEventListener("click", closeDrawer);
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeDrawer();
-      });
-
-      // Cho JS mở form khi bấm "Sửa"
-      window.AdminCategoryDrawer = { open: openDrawer, close: closeDrawer };
     </script>
   </body>
 </html>
