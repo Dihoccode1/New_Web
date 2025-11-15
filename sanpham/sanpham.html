@@ -97,8 +97,6 @@
         grid-template-columns: 1.6fr 1fr 0.9fr 0.9fr 1fr auto;
         gap: 12px;
         padding: 14px;
-        background: #f8fafc;
-        border: 1px solid #e9eef5;
         border-radius: 12px;
         align-items: end;
       }
@@ -436,7 +434,10 @@
       .page-item:not(.active) .page-link:hover {
         text-decoration: underline;
       }
-
+      .main-nav a 
+      {
+        text-decoration: none;
+      }
       /* mobile header fix */
       @media (max-width: 767.98px) {
         .header-left,
@@ -1224,6 +1225,28 @@
           renderPagination(view.length, cur, per);
           state.page = cur;
         }
+                // BẮT SỰ KIỆN CLICK PHÂN TRANG
+        if (PAGING) {
+          PAGING.addEventListener("click", function (e) {
+            const link = e.target.closest(".page-link[data-page]");
+            if (!link) return;
+
+            e.preventDefault();
+
+            const p = parseInt(link.getAttribute("data-page"), 10);
+            if (!p || p === state.page) return;
+
+            state.page = p;
+            renderPage();
+
+            // Scroll lên lưới sản phẩm cho đẹp
+            if (ROOT) {
+              const top = ROOT.getBoundingClientRect().top + window.scrollY - 100;
+              window.scrollTo({ top, behavior: "smooth" });
+            }
+          });
+        }
+
 
         /* 8. init từ URL */
         (function initFilters() {
@@ -1396,5 +1419,6 @@
         w.addEventListener("cart:changed", () => w.SVUI?.updateCartCount?.());
       })(window, document);
     </script>
+
   </body>
 </html>

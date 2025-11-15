@@ -31,367 +31,262 @@
     />
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/base.css" />
-    <style>
-      /* =========================
-   BASE
-   ========================= */
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-      html,
-      img {
-        max-width: 100%;
-        display: block;
-      }
-      a {
-        text-decoration: none;
-      }
+<style>
+  /* Reset nhẹ + ảnh/link */
+  img {
+    max-width: 100%;
+    display: block;
+  }
+  a {
+    color: #0d6efd;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
 
-      /* =========================
-   CONTAINER + GRID
-   ========================= */
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 16px;
-      }
-      .row {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .col-12 {
-        flex: 0 0 100%;
-        max-width: 100%;
-      }
-      .col-6 {
-        flex: 0 0 50%;
-        max-width: 50%;
-      }
+  /* =========================
+     CONTAINER + GRID (giống trang Tin tức)
+     ========================= */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -8px;
+  }
+  .col {
+    padding: 0 8px;
+  }
+  .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
 
-      /* =========================
-   TOPBAR
-   ========================= */
-      .topbar {
-        background: #fff;
-        border-bottom: 1px solid #eee;
-        padding: 10px 0;
-      }
-      .topbar > .container {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-      }
-      .topbar-right {
-        margin-left: auto;
-        display: flex;
-        gap: 12px;
-      }
-      .topbar-right a {
-        margin-left: 10px;
-        padding: 5px 12px;
-        font-size: 13px;
-        border-radius: 4px;
-        transition: 0.3s;
-      }
+  /* link trong topbar – dùng chung cho login/đăng ký/đăng xuất */
+  .topbar-right a {
+    margin-left: 10px;
+    padding: 5px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
 
-      /* Buttons (login/logout...) */
-      .btn-primary,
-      .btn-logout {
-        background: #333 !important;
-        color: #fff !important;
-        border: 1px solid #333 !important;
-        border-radius: 4px !important;
-        padding: 5px 12px !important;
-        font-size: 13px !important;
-        transition: 0.3s !important;
-        display: inline-block !important;
-      }
-      .btn-primary:hover,
-      .btn-logout:hover {
-        background: #555 !important;
-      }
+  /* viền đen, chữ đen (thường dùng cho Đăng ký) */
+  .btn-outline {
+    border: 1px solid #333;
+    color: #333;
+  }
+  .btn-outline:hover {
+    background: #333;
+    color: #fff;
+  }
 
-      /* =========================
-   MID-HEADER
-   ========================= */
-      .mid-header {
-        background: #fff;
-        padding: 10px 0;
-      }
-      .header-main {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .header-left {
-        flex: 1;
-      }
-      .header-center {
-        text-align: center;
-      }
-      .header-center .logo img {
-        max-height: 50px;
-      }
-      .header-right {
-        flex: 1;
-        display: flex;
-        justify-content: flex-end;
-      }
+  /* nút đen, chữ trắng (Đăng nhập / Đăng xuất / Xem chi tiết) */
+  .btn-primary {
+    background: #333;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    background: #555;
+  }
 
-      /* Search */
-      .search-bar {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ddd;
-        border-radius: 25px;
-        overflow: hidden;
-        max-width: 260px;
-      }
-      .search-bar input {
-        border: 0;
-        outline: 0;
-        padding: 8px 15px;
-        font-size: 14px;
-        flex: 1;
-      }
-      .search-bar button {
-        background: #333;
-        color: #fff;
-        border: 0;
-        padding: 8px 14px;
-        cursor: pointer;
-      }
-      .search-bar button:hover {
-        background: #555;
-      }
+  /* Nếu AUTH tạo riêng class .btn-logout thì vẫn hưởng style chung */
+  .btn-logout {
+    background: #333;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+  .btn-logout:hover {
+    background: #555;
+  }
 
-      /* Cart */
-      .cart-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-weight: 600;
-        color: #333;
-      }
-      .cart-link i {
-        font-size: 18px;
-      }
+  /* =========================
+     BREADCRUMB – giống trang Tin tức
+     ========================= */
+  .bread-crumb {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    background: transparent;
+  }
+  .breadcrumb {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 14px;
+    background: transparent !important;
+  }
+  .breadcrumb li {
+    display: flex;
+    align-items: center;
+    color: #666;
+  }
+  .breadcrumb li.home a {
+    font-weight: 600;
+    color: #333;
+  }
+  .breadcrumb .sep i {
+    color: #999;
+  }
+  .breadcrumb li strong span {
+    color: #000;
+  }
 
-      /* =========================
-   MENU NGANG
-   ========================= */
-      .main-nav {
-        background: #fff;
-        margin-top: 15px;
-      }
-      .main-nav ul {
-        list-style: none;
-        display: flex;
-        justify-content: center;
-        margin: 0;
-        padding: 0;
-      }
-      .main-nav a {
-        display: block;
-        padding: 14px 20px;
-        color: #111;
-        font-weight: 600;
-        transition: 0.2s;
-      }
-      .main-nav a:hover {
-        color: #007bff;
-      }
+  /* =========================
+     PAGE TITLE
+     ========================= */
+  .page-header {
+    padding: 18px 0 6px;
+  }
+  .page-header h1 {
+    font-size: 35px;
+    margin: 0;
+    font-weight: 700;
+  }
 
-      /* =========================
-   BREADCRUMB
-   ========================= */
-      .bread-crumb {
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-        background: transparent;
-      }
-      .breadcrumb {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        font-size: 14px;
-        background: transparent !important;
-      }
-      .breadcrumb li {
-        display: flex;
-        align-items: center;
-        color: #666;
-      }
-      .breadcrumb li.home a {
-        font-weight: 600;
-        color: #333;
-      }
-      .breadcrumb .sep i {
-        color: #999;
-      }
-      .breadcrumb li strong span {
-        color: #000;
-      }
+  /* =========================
+     LIÊN HỆ – MAP + FORM + INFO
+     ========================= */
+  .box-maps {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .map {
+    position: relative;
+    padding-top: 45%;
+  }
+  .map iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
 
-      /* =========================
-   PAGE TITLE
-   ========================= */
-      .page-header {
-        padding: 18px 0 6px;
-      }
-      .page-header h1 {
-        font-size: 35px;
-        margin: 0;
-        font-weight: 700;
-      }
+  .card,
+  .contact-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff;
+  }
+  .card h2,
+  .contact-card h2 {
+    font-size: 18px;
+    margin: 0 0 10px;
+  }
 
-      /* =========================
-   LIÊN HỆ
-   ========================= */
-      .box-maps {
-        border: 1px solid #eee;
-        border-radius: 6px;
-        overflow: hidden;
-      }
-      .map {
-        position: relative;
-        padding-top: 45%;
-      }
-      .map iframe {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-      }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    font: inherit;
+    background: #fff;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+  }
+  textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+  }
 
-      .card,
-      .contact-card {
-        border: 1px solid #eee;
-        border-radius: 8px;
-        padding: 16px;
-        background: #fff;
-      }
-      .card h2,
-      .contact-card h2 {
-        font-size: 18px;
-        margin: 0 0 10px;
-      }
-      .form-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-      label {
-        display: block;
-        font-weight: 500;
-        margin-bottom: 4px;
-      }
-      .form-control {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #d9d9d9;
-        border-radius: 6px;
-        font: inherit;
-        background: #fff;
-      }
-      .form-control:focus {
-        outline: none;
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
-      }
-      textarea.form-control {
-        min-height: 120px;
-        resize: vertical;
-      }
+  /* nút gửi trong form liên hệ */
+  .card button.btn {
+    background: #333;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .card button.btn:hover {
+    background: #555;
+  }
 
-      /* nút gửi trong form liên hệ */
-      .card button.btn {
-        background: #333;
-        color: #fff;
-        border: 1px solid #333;
-        border-radius: 6px;
-        padding: 8px 14px;
-        cursor: pointer;
-        transition: 0.2s;
-      }
-      .card button.btn:hover {
-        background: #555;
-      }
+  .contact-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-top: 1px dashed #eee;
+  }
+  .contact-item:first-child {
+    border-top: 0;
+  }
+  .contact-item .icon {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .contact-item .text {
+    font-size: 14px;
+    color: #333;
+  }
+  .contact-item .text a {
+    color: #333;
+  }
+  .contact-item .text a:hover {
+    color: #ff0000;
+  }
 
-      .contact-item {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        padding: 10px 0;
-        border-top: 1px dashed #eee;
-      }
-      .contact-item:first-child {
-        border-top: 0;
-      }
-      .contact-item .icon {
-        width: 34px;
-        height: 34px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-      }
-      .contact-item .text {
-        font-size: 14px;
-        color: #333;
-      }
-      .contact-item .text a {
-        color: #333;
-      }
-      .contact-item .text a:hover {
-        color: #ff0000;
-      }
+  /* =========================
+     RESPONSIVE – giống logic Tin tức
+     ========================= */
+  @media (max-width: 992px) {
+    .col-6 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    .map {
+      padding-top: 56%;
+    }
+    .page-header h1 {
+      font-size: 28px;
+    }
+  }
+</style>
 
-      /* =========================
-   RESPONSIVE
-   ========================= */
-      @media (max-width: 992px) {
-        .col-6 {
-          flex: 0 0 100%;
-          max-width: 100%;
-        }
-        .map {
-          padding-top: 56%;
-        }
-        .page-header h1 {
-          font-size: 28px;
-        }
-      }
-      @media (max-width: 767.98px) {
-        .search-bar {
-          display: none !important;
-        }
-        .header-main {
-          display: grid;
-          grid-template-columns: auto 1fr auto;
-          gap: 8px;
-          align-items: center;
-        }
-        .header-center .logo img {
-          max-height: 40px;
-        }
-        .cart-link {
-          font-size: 13px;
-        }
-
-        .btn-logout {
-          padding: 5px 8px !important;
-          font-size: 11px !important;
-          max-width: 70px !important;
-        }
-      }
-    </style>
   </head>
 
   <body>
@@ -840,13 +735,15 @@
       </div>
     </footer>
 
-    <script src="./assets/js/auth.js"></script>
-    <script src="./assets/js/auth.security.enforcer.js"></script>
-    <script src="./assets/js/auth.modal.bridge.js"></script>
+<script src="./assets/js/auth.js"></script>
+<script src="./assets/js/auth.security.enforcer.js"></script>
+<script src="./assets/js/auth.modal.bridge.js"></script>
 
-    <script src="./assets/js/products.seed.js"></script>
-    <script src="./assets/js/store.js"></script>
-    <script src="./assets/js/ui.js"></script>
+<script src="./assets/js/products.seed.js"></script>
+<script src="./assets/js/store.js"></script>
+<script src="./assets/js/ui.js"></script>
+<script src="./assets/js/products.app.js"></script>
+
     <script>
       (function () {
         function isMobile() {

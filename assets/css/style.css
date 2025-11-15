@@ -971,11 +971,6 @@
     margin-right: 0 !important;
     margin-left: auto !important; /* Đẩy sang phải */
   }
-  /* 1. Ẩn Top Bar (Đăng ký/Đăng nhập) */
-  .top-bar {
-    display: none !important;
-  }
-
   /* 2. Ẩn Thanh Tìm Kiếm */
   .search-bar {
     display: none !important;
